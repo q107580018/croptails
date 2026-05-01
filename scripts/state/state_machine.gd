@@ -8,7 +8,7 @@ signal state_changed(from_state: StringName, to_state: StringName)
 var current_state: State
 var states: Dictionary[StringName, State] = {}
 
-func setup(game_node: Node) -> void:
+func setup(game_node: Main) -> void:
 	for child: Node in get_children():
 		if child is State:
 			var state := child as State

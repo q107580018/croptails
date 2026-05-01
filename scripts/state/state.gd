@@ -2,7 +2,7 @@ class_name State
 extends Node
 
 var state_machine: StateMachine
-var game: Node
+var game: Main
 
 func enter(_msg: Dictionary = {}) -> void:
 	pass
