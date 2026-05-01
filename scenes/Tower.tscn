@@ -1,0 +1,18 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/game/tower.gd" id="1_tower"]
+
+[node name="root" type="Area2D" unique_id=558663854]
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("1_tower")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=409228308]
+
+[node name="Marker" type="ColorRect" parent="." unique_id=1277375983]
+offset_left = -8.0
+offset_top = -24.0
+offset_right = 8.0
+offset_bottom = -19.0
+
+[node name="RangeShape" type="CollisionShape2D" parent="." unique_id=1484846685]

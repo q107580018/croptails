@@ -1,0 +1,22 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/game/tower_slot.gd" id="1_slot"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_slot"]
+size = Vector2(28, 28)
+
+[node name="root" type="Area2D" unique_id=1684408198]
+script = ExtResource("1_slot")
+input_pickable = true
+collision_layer = 1
+collision_mask = 0
+
+[node name="Marker" type="ColorRect" parent="." unique_id=184902976]
+offset_left = -12.0
+offset_top = -12.0
+offset_right = 12.0
+offset_bottom = 12.0
+color = Color(0.2, 0.7, 0.2, 0.65)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1998337628]
+shape = SubResource("RectangleShape2D_slot")
