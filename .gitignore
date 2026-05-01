@@ -4,4 +4,5 @@
 
 # Local tooling and OS files
 .superpowers/
+.worktrees/
 .DS_Store
