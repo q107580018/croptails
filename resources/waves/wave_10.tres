@@ -1,0 +1,31 @@
+[gd_resource type="Resource" script_class="WaveConfig" format=3 uid="uid://csnvtwi4uus2r"]
+
+[ext_resource type="Script" path="res://scripts/data/wave_config.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/data/wave_entry.gd" id="2"]
+[ext_resource type="Resource" path="res://resources/enemies/normal_enemy.tres" id="3"]
+[ext_resource type="Resource" path="res://resources/enemies/fast_enemy.tres" id="4"]
+[ext_resource type="Resource" path="res://resources/enemies/tank_enemy.tres" id="5"]
+
+[resource]
+script = ExtResource("1")
+wave_number = 10
+coin_bonus = 30
+entries = Array[ExtResource("2")]([SubResource("Resource_1"), SubResource("Resource_2"), SubResource("Resource_3")])
+
+[sub_resource type="Resource" script_class="WaveEntry" id="Resource_1"]
+script = ExtResource("2")
+enemy = ExtResource("3")
+count = 12
+spawn_interval = 0.4
+
+[sub_resource type="Resource" script_class="WaveEntry" id="Resource_2"]
+script = ExtResource("2")
+enemy = ExtResource("4")
+count = 12
+spawn_interval = 0.4
+
+[sub_resource type="Resource" script_class="WaveEntry" id="Resource_3"]
+script = ExtResource("2")
+enemy = ExtResource("5")
+count = 8
+spawn_interval = 0.65

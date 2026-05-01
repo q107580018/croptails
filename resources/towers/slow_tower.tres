@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="TowerConfig" format=3 uid="uid://ceq303pu1bxy6"]
+
+[ext_resource type="Script" path="res://scripts/data/tower_config.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+display_name = "Slow Tower"
+role = 2
+cost = 65
+range = 100.0
+fire_rate = 0.9
+damage = 4
+splash_radius = 0.0
+slow_multiplier = 0.55
+slow_duration = 1.8
+marker_color = Color(0.42, 0.72, 0.85, 1)

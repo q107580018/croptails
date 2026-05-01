@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="EnemyConfig" format=3 uid="uid://hrnmhs07aen4"]
+
+[ext_resource type="Script" path="res://scripts/data/enemy_config.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/game/characters/basic_charakter_spritesheet.png" id="2"]
+
+[resource]
+script = ExtResource("1")
+display_name = "Normal Enemy"
+max_health = 36
+speed = 58.0
+reward = 8
+life_damage = 1
+sprite_texture = ExtResource("2")
+sprite_region = Rect2(0, 0, 16, 16)
+sprite_scale = Vector2(1, 1)
+tint = Color(1, 1, 1, 1)

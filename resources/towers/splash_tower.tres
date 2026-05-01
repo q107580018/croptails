@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="TowerConfig" format=3 uid="uid://cg5xvpjqil1qd"]
+
+[ext_resource type="Script" path="res://scripts/data/tower_config.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+display_name = "Splash Tower"
+role = 1
+cost = 80
+range = 95.0
+fire_rate = 0.75
+damage = 16
+splash_radius = 42.0
+slow_multiplier = 1.0
+slow_duration = 0.0
+marker_color = Color(0.85, 0.42, 0.23, 1)
