@@ -14,6 +14,7 @@ var base_speed: float = 50.0
 var slow_multiplier: float = 1.0
 var slow_remaining: float = 0.0
 var escaped: bool = false
+var dead: bool = false
 
 func _ready() -> void:
 	if config:
@@ -44,9 +45,12 @@ func apply_config(new_config: EnemyConfig) -> void:
 		health_bar.value = health
 
 func take_damage(amount: int) -> void:
+	if dead:
+		return
 	health = max(health - amount, 0)
 	health_bar.value = health
 	if health <= 0:
+		dead = true
 		died.emit(self, config.reward if config else 0)
 		queue_free()
 
