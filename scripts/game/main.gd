@@ -134,6 +134,7 @@ func _check_wave_end() -> void:
 	elif not has_more_waves():
 		state_machine.transition_to(&"VictoryPhase")
 	else:
+		coins += waves[current_wave_index - 1].coin_bonus
 		state_machine.transition_to(&"BuildPhase")
 
 func _emit_stats() -> void:

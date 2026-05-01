@@ -46,17 +46,17 @@ func _attack(target: Enemy) -> void:
 	target.take_damage(config.damage)
 	match config.role:
 		TowerConfig.Role.SPLASH:
-			_apply_splash(target.global_position)
+			_apply_splash(target.global_position, target)
 		TowerConfig.Role.SLOW:
 			target.apply_slow(config.slow_multiplier, config.slow_duration)
 		_:
 			pass
 
-func _apply_splash(center: Vector2) -> void:
+func _apply_splash(center: Vector2, target: Enemy) -> void:
 	if config.splash_radius <= 0.0:
 		return
 	for node: Node in get_tree().get_nodes_in_group("enemies"):
 		if node is Enemy:
 			var enemy := node as Enemy
-			if enemy.global_position.distance_to(center) <= config.splash_radius:
+			if enemy != target and enemy.global_position.distance_to(center) <= config.splash_radius:
 				enemy.take_damage(maxi(1, int(config.damage * 0.5)))
