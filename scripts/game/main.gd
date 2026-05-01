@@ -27,7 +27,6 @@ signal status_changed(text: String)
 @onready var enemy_path: Path2D = $EnemyPath
 @onready var tower_slots: Node2D = $TowerSlots
 @onready var towers: Node2D = $Towers
-@onready var enemies: Node2D = $Enemies
 @onready var state_machine: StateMachine = $GameStateMachine
 @onready var hud: Hud = $UI/Hud
 
@@ -128,7 +127,7 @@ func _on_enemy_reached_goal(_enemy: Enemy, life_damage: int) -> void:
 		_check_wave_end.call_deferred()
 
 func _check_wave_end() -> void:
-	if spawning or enemies.get_child_count() > 0 or enemy_path.get_child_count() > 0:
+	if spawning or enemy_path.get_child_count() > 0:
 		return
 	if lives <= 0:
 		state_machine.transition_to(&"DefeatPhase")
