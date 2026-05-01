@@ -7,6 +7,13 @@
 [ext_resource type="Script" uid="uid://hyrsf4rxf56a" path="res://scripts/state/defeat_phase.gd" id="5_dp"]
 [ext_resource type="Script" path="res://scripts/game/main.gd" id="6_main"]
 [ext_resource type="Script" path="res://scripts/ui/hud.gd" id="7_hud"]
+[ext_resource type="PackedScene" path="res://scenes/TowerSlot.tscn" id="8_slot"]
+[ext_resource type="CompressedTexture2D" uid="uid://32s7r74hqpnk" path="res://assets/game/objects/free_chicken_house.png" id="9_chicken"]
+
+[sub_resource type="Curve2D" id="Curve2D_enemy"]
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, 0, 40, 0, 0, 0, 0, 248, 40, 0, 0, 0, 0, 248, 120, 0, 0, 0, 0, 104, 120, 0, 0, 0, 0, 104, 184, 0, 0, 0, 0, 376, 184)
+}
 
 [node name="root" type="Node2D" unique_id=1906210728]
 script = ExtResource("6_main")
@@ -14,8 +21,40 @@ script = ExtResource("6_main")
 [node name="Map" type="TileMapLayer" parent="." unique_id=1806014128]
 
 [node name="EnemyPath" type="Path2D" parent="." unique_id=110740544]
+curve = SubResource("Curve2D_enemy")
 
 [node name="TowerSlots" type="Node2D" parent="." unique_id=1656303724]
+
+[node name="Slot01" parent="TowerSlots" instance=ExtResource("8_slot")]
+position = Vector2(80, 72)
+
+[node name="Slot02" parent="TowerSlots" instance=ExtResource("8_slot")]
+position = Vector2(160, 72)
+
+[node name="Slot03" parent="TowerSlots" instance=ExtResource("8_slot")]
+position = Vector2(216, 96)
+
+[node name="Slot04" parent="TowerSlots" instance=ExtResource("8_slot")]
+position = Vector2(176, 152)
+
+[node name="Slot05" parent="TowerSlots" instance=ExtResource("8_slot")]
+position = Vector2(72, 152)
+
+[node name="Slot06" parent="TowerSlots" instance=ExtResource("8_slot")]
+position = Vector2(136, 200)
+
+[node name="Slot07" parent="TowerSlots" instance=ExtResource("8_slot")]
+position = Vector2(232, 160)
+
+[node name="Slot08" parent="TowerSlots" instance=ExtResource("8_slot")]
+position = Vector2(304, 160)
+
+[node name="FarmTarget" type="Sprite2D" parent="." unique_id=684925731]
+position = Vector2(392, 176)
+texture = ExtResource("9_chicken")
+region_enabled = true
+region_rect = Rect2(0, 0, 32, 32)
+scale = Vector2(1, 1)
 
 [node name="Towers" type="Node2D" parent="." unique_id=1802146912]
 
