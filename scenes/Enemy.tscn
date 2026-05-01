@@ -8,8 +8,10 @@ script = ExtResource("1_enemy")
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1822553621]
 
 [node name="HealthBar" type="ProgressBar" parent="." unique_id=393750811]
-offset_right = 4.0
-offset_bottom = 27.0
+offset_left = -12.0
+offset_top = -22.0
+offset_right = 12.0
+offset_bottom = -18.0
 max_value = 1.0
 value = 1.0
 show_percentage = false
