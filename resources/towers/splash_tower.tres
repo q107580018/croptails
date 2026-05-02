@@ -1,6 +1,10 @@
 [gd_resource type="Resource" script_class="TowerConfig" format=3 uid="uid://cg5xvpjqil1qd"]
 
-[ext_resource type="Script" path="res://scripts/data/tower_config.gd" id="1"]
+[ext_resource type="Script" uid="uid://dnckf2x4we1yb" path="res://scripts/data/tower_config.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://ddk3d44djfy0o" path="res://assets/Tiny Swords/Units/Red Units/Archer/Archer_Idle.png" id="2_idle"]
+[ext_resource type="Texture2D" uid="uid://b5n1vl8arvbsk" path="res://assets/Tiny Swords/Units/Red Units/Archer/Archer_Shoot.png" id="3_shoot"]
+[ext_resource type="Texture2D" uid="uid://dgcpmlsbf6rm0" path="res://assets/Tiny Swords/Units/Red Units/Archer/Arrow.png" id="4_arrow"]
+[ext_resource type="Texture2D" path="res://assets/ui/tower_icons/splash_tower_icon.png" id="5_menu"]
 
 [resource]
 script = ExtResource("1")
@@ -11,6 +15,8 @@ range = 95.0
 fire_rate = 0.75
 damage = 16
 splash_radius = 42.0
-slow_multiplier = 1.0
-slow_duration = 0.0
 marker_color = Color(0.85, 0.42, 0.23, 1)
+menu_icon_texture = ExtResource("5_menu")
+idle_texture = ExtResource("2_idle")
+shoot_texture = ExtResource("3_shoot")
+projectile_texture = ExtResource("4_arrow")

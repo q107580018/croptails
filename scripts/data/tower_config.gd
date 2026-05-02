@@ -13,3 +13,7 @@ enum Role { ARROW, SPLASH, SLOW }
 @export_range(0.1, 1.0) var slow_multiplier: float = 1.0
 @export var slow_duration: float = 0.0
 @export var marker_color: Color = Color.WHITE
+@export var menu_icon_texture: Texture2D
+@export var idle_texture: Texture2D
+@export var shoot_texture: Texture2D
+@export var projectile_texture: Texture2D

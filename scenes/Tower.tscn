@@ -1,19 +1,15 @@
 [gd_scene format=3]
 
 [ext_resource type="Script" path="res://scripts/game/tower.gd" id="1_tower"]
-[ext_resource type="Texture2D" uid="uid://bswxcm6sm22wj" path="res://assets/game/characters/basic_charakter_spritesheet.png" id="2_character"]
 
 [node name="root" type="Area2D" unique_id=558663854]
 collision_layer = 2
 collision_mask = 2
 script = ExtResource("1_tower")
 
-[node name="Sprite2D" type="Sprite2D" parent="." unique_id=409228308]
-position = Vector2(0, -16)
-texture = ExtResource("2_character")
-region_enabled = true
-region_rect = Rect2(0, 0, 48, 48)
-scale = Vector2(0.8, 0.8)
+[node name="Sprite2D" type="AnimatedSprite2D" parent="." unique_id=409228308]
+position = Vector2(0, -4)
+scale = Vector2(0.32, 0.32)
 
 [node name="Marker" type="ColorRect" parent="." unique_id=1277375983]
 offset_left = -10.0

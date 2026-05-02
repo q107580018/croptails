@@ -57,6 +57,7 @@ animations = [{
 radius = 10.0
 
 [node name="root" type="PathFollow2D" unique_id=129724694]
+rotates = false
 script = ExtResource("1_enemy")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1822553621]

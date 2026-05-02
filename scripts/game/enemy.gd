@@ -25,7 +25,9 @@ func _process(delta: float) -> void:
 		slow_remaining = maxf(slow_remaining - delta, 0.0)
 		if slow_remaining == 0.0:
 			slow_multiplier = 1.0
+	var previous_position := global_position
 	progress += base_speed * slow_multiplier * delta
+	_update_facing(global_position - previous_position)
 	if progress_ratio >= 1.0 and not escaped:
 		escaped = true
 		reached_goal.emit(self, config.life_damage if config else 1)
@@ -59,3 +61,11 @@ func apply_slow(multiplier: float, duration: float) -> void:
 
 func distance_to_goal() -> float:
 	return 1.0 - progress_ratio
+
+func _update_facing(movement: Vector2) -> void:
+	if movement.length_squared() <= 0.0001:
+		return
+	if absf(movement.x) > absf(movement.y):
+		sprite.flip_h = movement.x < 0.0
+	else:
+		sprite.flip_h = movement.y > 0.0

@@ -33,12 +33,11 @@ signal status_changed(text: String)
 var lives: int = 20
 var coins: int = 180
 var current_wave_index: int = 0
-var selected_tower_index: int = 0
 var spawning: bool = false
-var auto_starting_next_wave: bool = false
 
 func _ready() -> void:
 	hud.setup(self)
+	hud.build_selected.connect(_on_hud_build_selected)
 	for slot_node: Node in tower_slots.get_children():
 		if slot_node is TowerSlot:
 			var slot := slot_node as TowerSlot
@@ -50,12 +49,9 @@ func _ready() -> void:
 func has_more_waves() -> bool:
 	return current_wave_index < waves.size()
 
-func select_tower(index: int) -> void:
-	selected_tower_index = clampi(index, 0, tower_configs.size() - 1)
-	set_status("Selected %s." % tower_configs[selected_tower_index].display_name)
-
 func start_wave() -> void:
 	if has_more_waves():
+		hud.hide_build_menu()
 		state_machine.transition_to(&"WavePhase")
 
 func spawn_current_wave() -> void:
@@ -71,6 +67,8 @@ func spawn_current_wave() -> void:
 	_check_wave_end()
 
 func set_building_enabled(enabled: bool) -> void:
+	if not enabled:
+		hud.hide_build_menu()
 	for slot_node: Node in tower_slots.get_children():
 		if slot_node is TowerSlot:
 			(slot_node as TowerSlot).set_enabled(enabled)
@@ -102,9 +100,17 @@ func _spawn_enemy(config: EnemyConfig) -> void:
 	enemy_path.add_child(enemy)
 
 func _on_slot_build_requested(slot: TowerSlot) -> void:
-	var config := tower_configs[selected_tower_index]
+	var menu_position := slot.get_global_transform_with_canvas().origin
+	hud.show_build_menu(slot, tower_configs, coins, menu_position)
+
+func _on_hud_build_selected(slot: TowerSlot, tower_index: int) -> void:
+	if slot == null or slot.occupied:
+		hud.hide_build_menu()
+		return
+	var clamped_index := clampi(tower_index, 0, tower_configs.size() - 1)
+	var config := tower_configs[clamped_index]
 	if coins < config.cost:
-		set_status("Not enough coins for %s." % config.display_name)
+		set_status("金币不足，无法建造 %s。" % config.display_name)
 		return
 	coins -= config.cost
 	var tower := tower_scene.instantiate() as Tower
@@ -112,6 +118,7 @@ func _on_slot_build_requested(slot: TowerSlot) -> void:
 	towers.add_child(tower)
 	tower.global_position = slot.global_position
 	slot.mark_occupied()
+	hud.hide_build_menu()
 	_emit_stats()
 
 func _on_enemy_died(_enemy: Enemy, reward: int) -> void:
@@ -136,8 +143,8 @@ func _check_wave_end() -> void:
 		state_machine.transition_to(&"VictoryPhase")
 	else:
 		coins += waves[current_wave_index - 1].coin_bonus
+		_emit_stats()
 		state_machine.transition_to(&"BuildPhase")
-		_auto_start_next_wave.call_deferred()
 
 func _emit_stats() -> void:
 	stats_changed.emit(lives, coins, current_wave_index, waves.size())
@@ -152,13 +159,3 @@ func _active_enemy_count() -> int:
 		if not child.is_queued_for_deletion():
 			count += 1
 	return count
-
-func _auto_start_next_wave() -> void:
-	if auto_starting_next_wave or not has_more_waves():
-		return
-	auto_starting_next_wave = true
-	set_status("Next wave starts soon. Build quickly.")
-	await get_tree().create_timer(2.0).timeout
-	auto_starting_next_wave = false
-	if lives > 0 and has_more_waves() and state_machine.current_state and state_machine.current_state.name == &"BuildPhase":
-		state_machine.transition_to(&"WavePhase")

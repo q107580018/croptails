@@ -13,7 +13,6 @@
 [ext_resource type="Texture2D" uid="uid://5a3qv4njl0yj" path="res://assets/game/tilesets/water.png" id="11_water"]
 [ext_resource type="Texture2D" uid="uid://ua8brkh8au33" path="res://assets/game/tilesets/fences.png" id="12_fences"]
 [ext_resource type="Texture2D" uid="uid://dppe0mjob4bcd" path="res://assets/game/objects/basic_grass_biom_things.png" id="13_grass_objects"]
-[ext_resource type="Texture2D" uid="uid://uvjft44t5mh2" path="res://assets/game/objects/basic_tools_and_meterials.png" id="14_tools"]
 
 [sub_resource type="Curve2D" id="Curve2D_enemy"]
 _data = {
@@ -136,12 +135,6 @@ texture = ExtResource("10_paths")
 region_enabled = true
 region_rect = Rect2(0, 0, 64, 64)
 
-[node name="ToolsCrate" type="Sprite2D" parent="World/Decor" unique_id=2123328471]
-position = Vector2(326, 78)
-texture = ExtResource("14_tools")
-region_enabled = true
-region_rect = Rect2(0, 0, 48, 32)
-
 [node name="GrassClump01" type="Sprite2D" parent="World/Decor" unique_id=1201864109]
 position = Vector2(42, 88)
 texture = ExtResource("13_grass_objects")
@@ -159,12 +152,6 @@ position = Vector2(330, 134)
 texture = ExtResource("13_grass_objects")
 region_enabled = true
 region_rect = Rect2(48, 0, 32, 32)
-
-[node name="FlowerPatch" type="Sprite2D" parent="World/Decor" unique_id=462006365]
-position = Vector2(286, 72)
-texture = ExtResource("13_grass_objects")
-region_enabled = true
-region_rect = Rect2(80, 0, 48, 32)
 
 [node name="MushroomPatch" type="Sprite2D" parent="World/Decor" unique_id=1296840130]
 position = Vector2(56, 170)
@@ -186,10 +173,10 @@ position = Vector2(80, 72)
 position = Vector2(160, 72)
 
 [node name="Slot03" parent="World/TowerSlots" unique_id=31941829 instance=ExtResource("8_slot")]
-position = Vector2(216, 96)
+position = Vector2(221.5, 94)
 
 [node name="Slot04" parent="World/TowerSlots" unique_id=1187132926 instance=ExtResource("8_slot")]
-position = Vector2(176, 152)
+position = Vector2(176, 160)
 
 [node name="Slot05" parent="World/TowerSlots" unique_id=1184236872 instance=ExtResource("8_slot")]
 position = Vector2(72, 152)
@@ -203,12 +190,30 @@ position = Vector2(232, 160)
 [node name="Slot08" parent="World/TowerSlots" unique_id=303323577 instance=ExtResource("8_slot")]
 position = Vector2(304, 160)
 
+[node name="Slot09" parent="World/TowerSlots" unique_id=1419525746 instance=ExtResource("8_slot")]
+position = Vector2(122, 72)
+
+[node name="Slot10" parent="World/TowerSlots" unique_id=939035318 instance=ExtResource("8_slot")]
+position = Vector2(222, 74)
+
+[node name="Slot11" parent="World/TowerSlots" unique_id=358174180 instance=ExtResource("8_slot")]
+position = Vector2(234, 18)
+
+[node name="Slot12" parent="World/TowerSlots" unique_id=568029893 instance=ExtResource("8_slot")]
+position = Vector2(281, 48)
+
+[node name="Slot13" parent="World/TowerSlots" unique_id=1928108163 instance=ExtResource("8_slot")]
+position = Vector2(284, 86)
+
+[node name="Slot14" parent="World/TowerSlots" unique_id=1381801928 instance=ExtResource("8_slot")]
+position = Vector2(285, 123)
+
 [node name="FarmTarget" type="Sprite2D" parent="World" unique_id=684925731]
 position = Vector2(392, 176)
 scale = Vector2(1.25, 1.25)
 texture = ExtResource("9_chicken")
 region_enabled = true
-region_rect = Rect2(0, 0, 32, 32)
+region_rect = Rect2(0, 0, 47.5, 49.25)
 
 [node name="Towers" type="Node2D" parent="World" unique_id=1802146912]
 
@@ -238,6 +243,12 @@ layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = 26.0
+offset_top = 3.0
+offset_right = 26.0
+offset_bottom = 3.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("7_hud")
 

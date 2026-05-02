@@ -12,9 +12,9 @@ This is a Godot 4 project named `Croptails`. The main entry scene is `res://scen
 
 ## Build, Test, and Development Commands
 
-- `godot --editor --path .` opens the project in the Godot editor.
-- `godot --path .` runs the configured main scene.
-- `godot --headless --path . --quit` performs a quick headless project load check.
+- `/Applications/Godot.app/Contents/MacOS/godot --editor --path .` opens the project in the Godot editor.
+- `/Applications/Godot.app/Contents/MacOS/godot --path .` runs the configured main scene.
+- `/Applications/Godot.app/Contents/MacOS/godot --headless --path . --quit` performs a quick headless project load check.
 
 If your Godot binary is versioned or installed outside `PATH`, use the matching local command, for example `Godot_v4.6 --path .`.
 
