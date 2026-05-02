@@ -1,6 +1,7 @@
 [gd_scene format=3]
 
 [ext_resource type="Script" path="res://scripts/game/tower_slot.gd" id="1_slot"]
+[ext_resource type="Texture2D" uid="uid://uvjft44t5mh2" path="res://assets/game/objects/basic_tools_and_meterials.png" id="2_tools"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_slot"]
 size = Vector2(28, 28)
@@ -11,12 +12,19 @@ input_pickable = true
 collision_layer = 1
 collision_mask = 0
 
+[node name="BuildPad" type="Sprite2D" parent="." unique_id=671405573]
+texture = ExtResource("2_tools")
+region_enabled = true
+region_rect = Rect2(0, 0, 16, 16)
+scale = Vector2(1.35, 1.35)
+
 [node name="Marker" type="ColorRect" parent="." unique_id=184902976]
-offset_left = -12.0
-offset_top = -12.0
-offset_right = 12.0
-offset_bottom = 12.0
-color = Color(0.2, 0.7, 0.2, 0.65)
+offset_left = -9.0
+offset_top = -9.0
+offset_right = 9.0
+offset_bottom = 9.0
+mouse_filter = 2
+color = Color(0.18, 0.75, 0.22, 0.38)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1998337628]
 shape = SubResource("RectangleShape2D_slot")

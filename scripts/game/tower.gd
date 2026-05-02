@@ -26,6 +26,9 @@ func apply_config(new_config: TowerConfig) -> void:
 	config = new_config
 	if is_node_ready():
 		marker.color = config.marker_color
+		sprite.region_enabled = true
+		sprite.region_rect = _role_region(config.role)
+		sprite.modulate = Color.WHITE
 		var circle := CircleShape2D.new()
 		circle.radius = config.range
 		range_shape.shape = circle
@@ -60,3 +63,13 @@ func _apply_splash(center: Vector2, target: Enemy) -> void:
 			var enemy := node as Enemy
 			if enemy != target and enemy.global_position.distance_to(center) <= config.splash_radius:
 				enemy.take_damage(maxi(1, int(config.damage * 0.5)))
+
+
+func _role_region(role: TowerConfig.Role) -> Rect2:
+	match role:
+		TowerConfig.Role.SPLASH:
+			return Rect2(48, 0, 48, 48)
+		TowerConfig.Role.SLOW:
+			return Rect2(96, 0, 48, 48)
+		_:
+			return Rect2(0, 0, 48, 48)

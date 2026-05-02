@@ -1,66 +1,220 @@
-[gd_scene format=3 uid="uid://c4o2ybc1nue4f"]
+[gd_scene format=3 uid="uid://dbag3lurfiiew"]
 
 [ext_resource type="Script" uid="uid://dsac6ao6xol7" path="res://scripts/state/state_machine.gd" id="1_sm"]
 [ext_resource type="Script" uid="uid://b0g07b827qel0" path="res://scripts/state/build_phase.gd" id="2_bp"]
 [ext_resource type="Script" uid="uid://bxdx7fevsot43" path="res://scripts/state/wave_phase.gd" id="3_wp"]
 [ext_resource type="Script" uid="uid://hjvvnrmn5smd" path="res://scripts/state/victory_phase.gd" id="4_vp"]
 [ext_resource type="Script" uid="uid://hyrsf4rxf56a" path="res://scripts/state/defeat_phase.gd" id="5_dp"]
-[ext_resource type="Script" path="res://scripts/game/main.gd" id="6_main"]
-[ext_resource type="Script" path="res://scripts/ui/hud.gd" id="7_hud"]
+[ext_resource type="Script" uid="uid://cyimmcypr7cys" path="res://scripts/game/main.gd" id="6_main"]
+[ext_resource type="Script" uid="uid://b7ry20j25i53i" path="res://scripts/ui/hud.gd" id="7_hud"]
 [ext_resource type="PackedScene" path="res://scenes/TowerSlot.tscn" id="8_slot"]
-[ext_resource type="CompressedTexture2D" uid="uid://32s7r74hqpnk" path="res://assets/game/objects/free_chicken_house.png" id="9_chicken"]
+[ext_resource type="Texture2D" uid="uid://32s7r74hqpnk" path="res://assets/game/objects/free_chicken_house.png" id="9_chicken"]
+[ext_resource type="Texture2D" uid="uid://4vmn5g7w08w8" path="res://assets/game/objects/paths.png" id="10_paths"]
+[ext_resource type="Texture2D" uid="uid://5a3qv4njl0yj" path="res://assets/game/tilesets/water.png" id="11_water"]
+[ext_resource type="Texture2D" uid="uid://ua8brkh8au33" path="res://assets/game/tilesets/fences.png" id="12_fences"]
+[ext_resource type="Texture2D" uid="uid://dppe0mjob4bcd" path="res://assets/game/objects/basic_grass_biom_things.png" id="13_grass_objects"]
+[ext_resource type="Texture2D" uid="uid://uvjft44t5mh2" path="res://assets/game/objects/basic_tools_and_meterials.png" id="14_tools"]
 
 [sub_resource type="Curve2D" id="Curve2D_enemy"]
 _data = {
 "points": PackedVector2Array(0, 0, 0, 0, 0, 40, 0, 0, 0, 0, 248, 40, 0, 0, 0, 0, 248, 120, 0, 0, 0, 0, 104, 120, 0, 0, 0, 0, 104, 184, 0, 0, 0, 0, 376, 184)
 }
+point_count = 6
 
 [node name="root" type="Node2D" unique_id=1906210728]
 script = ExtResource("6_main")
 
-[node name="Map" type="TileMapLayer" parent="." unique_id=1806014128]
+[node name="World" type="Node2D" parent="." unique_id=1322108413]
+position = Vector2(40, 130)
+scale = Vector2(2, 2)
 
-[node name="EnemyPath" type="Path2D" parent="." unique_id=110740544]
+[node name="Background" type="ColorRect" parent="World" unique_id=2028990558]
+offset_left = -20.0
+offset_top = -24.0
+offset_right = 430.0
+offset_bottom = 248.0
+mouse_filter = 2
+color = Color(0.36, 0.58, 0.29, 1)
+
+[node name="RoadSegments" type="Node2D" parent="World" unique_id=1029673469]
+
+[node name="RoadTop" type="ColorRect" parent="World/RoadSegments" unique_id=1324731876]
+offset_left = -8.0
+offset_top = 30.0
+offset_right = 256.0
+offset_bottom = 50.0
+mouse_filter = 2
+color = Color(0.58, 0.38, 0.2, 1)
+
+[node name="RoadRightDrop" type="ColorRect" parent="World/RoadSegments" unique_id=1230367133]
+offset_left = 238.0
+offset_top = 40.0
+offset_right = 258.0
+offset_bottom = 130.0
+mouse_filter = 2
+color = Color(0.58, 0.38, 0.2, 1)
+
+[node name="RoadMiddle" type="ColorRect" parent="World/RoadSegments" unique_id=277500277]
+offset_left = 96.0
+offset_top = 110.0
+offset_right = 258.0
+offset_bottom = 130.0
+mouse_filter = 2
+color = Color(0.58, 0.38, 0.2, 1)
+
+[node name="RoadLeftDrop" type="ColorRect" parent="World/RoadSegments" unique_id=618080361]
+offset_left = 94.0
+offset_top = 120.0
+offset_right = 114.0
+offset_bottom = 194.0
+mouse_filter = 2
+color = Color(0.58, 0.38, 0.2, 1)
+
+[node name="RoadBottom" type="ColorRect" parent="World/RoadSegments" unique_id=180322617]
+offset_left = 96.0
+offset_top = 174.0
+offset_right = 384.0
+offset_bottom = 194.0
+mouse_filter = 2
+color = Color(0.58, 0.38, 0.2, 1)
+
+[node name="Decor" type="Node2D" parent="World" unique_id=370219348]
+
+[node name="WaterSouth" type="Sprite2D" parent="World/Decor" unique_id=2140756454]
+position = Vector2(44, 224)
+texture = ExtResource("11_water")
+region_enabled = true
+region_rect = Rect2(0, 0, 64, 16)
+
+[node name="WaterSouth2" type="Sprite2D" parent="World/Decor" unique_id=133885105]
+position = Vector2(108, 224)
+texture = ExtResource("11_water")
+region_enabled = true
+region_rect = Rect2(0, 0, 64, 16)
+
+[node name="WaterSouth3" type="Sprite2D" parent="World/Decor" unique_id=1506627247]
+position = Vector2(172, 224)
+texture = ExtResource("11_water")
+region_enabled = true
+region_rect = Rect2(0, 0, 64, 16)
+
+[node name="WaterSouth4" type="Sprite2D" parent="World/Decor" unique_id=1182396829]
+position = Vector2(236, 224)
+texture = ExtResource("11_water")
+region_enabled = true
+region_rect = Rect2(0, 0, 64, 16)
+
+[node name="FenceNorth1" type="Sprite2D" parent="World/Decor" unique_id=453594100]
+position = Vector2(48, 0)
+texture = ExtResource("12_fences")
+region_enabled = true
+region_rect = Rect2(0, 0, 64, 64)
+
+[node name="FenceNorth2" type="Sprite2D" parent="World/Decor" unique_id=1650155659]
+position = Vector2(112, 0)
+texture = ExtResource("12_fences")
+region_enabled = true
+region_rect = Rect2(0, 0, 64, 64)
+
+[node name="FenceNorth3" type="Sprite2D" parent="World/Decor" unique_id=1676982962]
+position = Vector2(176, 0)
+texture = ExtResource("12_fences")
+region_enabled = true
+region_rect = Rect2(0, 0, 64, 64)
+
+[node name="PathDetailTop" type="Sprite2D" parent="World/Decor" unique_id=918096133]
+position = Vector2(48, 58)
+scale = Vector2(0.7, 0.7)
+texture = ExtResource("10_paths")
+region_enabled = true
+region_rect = Rect2(0, 0, 64, 64)
+
+[node name="PathDetailMiddle" type="Sprite2D" parent="World/Decor" unique_id=1793469504]
+position = Vector2(190, 140)
+scale = Vector2(0.7, 0.7)
+texture = ExtResource("10_paths")
+region_enabled = true
+region_rect = Rect2(0, 0, 64, 64)
+
+[node name="ToolsCrate" type="Sprite2D" parent="World/Decor" unique_id=2123328471]
+position = Vector2(326, 78)
+texture = ExtResource("14_tools")
+region_enabled = true
+region_rect = Rect2(0, 0, 48, 32)
+
+[node name="GrassClump01" type="Sprite2D" parent="World/Decor" unique_id=1201864109]
+position = Vector2(42, 88)
+texture = ExtResource("13_grass_objects")
+region_enabled = true
+region_rect = Rect2(0, 0, 16, 32)
+
+[node name="GrassClump02" type="Sprite2D" parent="World/Decor" unique_id=2055554316]
+position = Vector2(196, 86)
+texture = ExtResource("13_grass_objects")
+region_enabled = true
+region_rect = Rect2(16, 0, 32, 32)
+
+[node name="GrassClump03" type="Sprite2D" parent="World/Decor" unique_id=1574971394]
+position = Vector2(330, 134)
+texture = ExtResource("13_grass_objects")
+region_enabled = true
+region_rect = Rect2(48, 0, 32, 32)
+
+[node name="FlowerPatch" type="Sprite2D" parent="World/Decor" unique_id=462006365]
+position = Vector2(286, 72)
+texture = ExtResource("13_grass_objects")
+region_enabled = true
+region_rect = Rect2(80, 0, 48, 32)
+
+[node name="MushroomPatch" type="Sprite2D" parent="World/Decor" unique_id=1296840130]
+position = Vector2(56, 170)
+texture = ExtResource("13_grass_objects")
+region_enabled = true
+region_rect = Rect2(32, 48, 48, 16)
+
+[node name="Map" type="TileMapLayer" parent="World" unique_id=1806014128]
+
+[node name="EnemyPath" type="Path2D" parent="World" unique_id=110740544]
 curve = SubResource("Curve2D_enemy")
 
-[node name="TowerSlots" type="Node2D" parent="." unique_id=1656303724]
+[node name="TowerSlots" type="Node2D" parent="World" unique_id=1656303724]
 
-[node name="Slot01" parent="TowerSlots" instance=ExtResource("8_slot")]
+[node name="Slot01" parent="World/TowerSlots" unique_id=411594594 instance=ExtResource("8_slot")]
 position = Vector2(80, 72)
 
-[node name="Slot02" parent="TowerSlots" instance=ExtResource("8_slot")]
+[node name="Slot02" parent="World/TowerSlots" unique_id=696830187 instance=ExtResource("8_slot")]
 position = Vector2(160, 72)
 
-[node name="Slot03" parent="TowerSlots" instance=ExtResource("8_slot")]
+[node name="Slot03" parent="World/TowerSlots" unique_id=31941829 instance=ExtResource("8_slot")]
 position = Vector2(216, 96)
 
-[node name="Slot04" parent="TowerSlots" instance=ExtResource("8_slot")]
+[node name="Slot04" parent="World/TowerSlots" unique_id=1187132926 instance=ExtResource("8_slot")]
 position = Vector2(176, 152)
 
-[node name="Slot05" parent="TowerSlots" instance=ExtResource("8_slot")]
+[node name="Slot05" parent="World/TowerSlots" unique_id=1184236872 instance=ExtResource("8_slot")]
 position = Vector2(72, 152)
 
-[node name="Slot06" parent="TowerSlots" instance=ExtResource("8_slot")]
+[node name="Slot06" parent="World/TowerSlots" unique_id=406210014 instance=ExtResource("8_slot")]
 position = Vector2(136, 200)
 
-[node name="Slot07" parent="TowerSlots" instance=ExtResource("8_slot")]
+[node name="Slot07" parent="World/TowerSlots" unique_id=565865912 instance=ExtResource("8_slot")]
 position = Vector2(232, 160)
 
-[node name="Slot08" parent="TowerSlots" instance=ExtResource("8_slot")]
+[node name="Slot08" parent="World/TowerSlots" unique_id=303323577 instance=ExtResource("8_slot")]
 position = Vector2(304, 160)
 
-[node name="FarmTarget" type="Sprite2D" parent="." unique_id=684925731]
+[node name="FarmTarget" type="Sprite2D" parent="World" unique_id=684925731]
 position = Vector2(392, 176)
+scale = Vector2(1.25, 1.25)
 texture = ExtResource("9_chicken")
 region_enabled = true
 region_rect = Rect2(0, 0, 32, 32)
-scale = Vector2(1, 1)
 
-[node name="Towers" type="Node2D" parent="." unique_id=1802146912]
+[node name="Towers" type="Node2D" parent="World" unique_id=1802146912]
 
-[node name="Enemies" type="Node2D" parent="." unique_id=2028182206]
+[node name="Enemies" type="Node2D" parent="World" unique_id=2028182206]
 
-[node name="Projectiles" type="Node2D" parent="." unique_id=2041062928]
+[node name="Projectiles" type="Node2D" parent="World" unique_id=2041062928]
 
 [node name="GameStateMachine" type="Node" parent="." unique_id=859263180]
 script = ExtResource("1_sm")
@@ -80,16 +234,21 @@ script = ExtResource("5_dp")
 [node name="UI" type="CanvasLayer" parent="." unique_id=925799140]
 
 [node name="Hud" type="Control" parent="UI" unique_id=2009209633]
-layout_mode = 2
-anchor_left = 0.0
-anchor_top = 0.0
+layout_mode = 3
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 0.0
-offset_top = 0.0
-offset_right = 0.0
-offset_bottom = 0.0
+mouse_filter = 2
 script = ExtResource("7_hud")
+
+[node name="HudPanel" type="ColorRect" parent="UI/Hud" unique_id=491971811]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 8.0
+offset_right = 452.0
+offset_bottom = 104.0
+mouse_filter = 2
+color = Color(0.08, 0.1, 0.08, 0.72)
 
 [node name="TopBar" type="HBoxContainer" parent="UI/Hud" unique_id=1130346769]
 layout_mode = 0
@@ -129,13 +288,17 @@ offset_left = 12.0
 offset_top = 86.0
 
 [node name="RestartButton" type="Button" parent="UI/Hud" unique_id=1422692703]
+visible = false
 layout_mode = 0
 offset_left = 120.0
 offset_top = 86.0
-visible = false
 
 [node name="StatusLabel" type="Label" parent="UI/Hud" unique_id=999042394]
 layout_mode = 0
 offset_left = 12.0
 offset_top = 124.0
 offset_right = 400.0
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=791127260]
+position = Vector2(455, 346)
+zoom = Vector2(1.17, 1.17)

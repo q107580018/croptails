@@ -24,9 +24,9 @@ signal status_changed(text: String)
 	preload("res://resources/waves/wave_10.tres"),
 ]
 
-@onready var enemy_path: Path2D = $EnemyPath
-@onready var tower_slots: Node2D = $TowerSlots
-@onready var towers: Node2D = $Towers
+@onready var enemy_path: Path2D = $World/EnemyPath
+@onready var tower_slots: Node2D = $World/TowerSlots
+@onready var towers: Node2D = $World/Towers
 @onready var state_machine: StateMachine = $GameStateMachine
 @onready var hud: Hud = $UI/Hud
 
@@ -35,6 +35,7 @@ var coins: int = 180
 var current_wave_index: int = 0
 var selected_tower_index: int = 0
 var spawning: bool = false
+var auto_starting_next_wave: bool = false
 
 func _ready() -> void:
 	hud.setup(self)
@@ -80,8 +81,8 @@ func set_start_wave_enabled(enabled: bool) -> void:
 func set_status(text: String) -> void:
 	status_changed.emit(text)
 
-func show_restart(visible: bool) -> void:
-	hud.show_restart(visible)
+func show_restart(should_show: bool) -> void:
+	hud.show_restart(should_show)
 
 func restart() -> void:
 	get_tree().reload_current_scene()
@@ -108,15 +109,15 @@ func _on_slot_build_requested(slot: TowerSlot) -> void:
 	coins -= config.cost
 	var tower := tower_scene.instantiate() as Tower
 	tower.config = config
-	tower.global_position = slot.global_position
 	towers.add_child(tower)
+	tower.global_position = slot.global_position
 	slot.mark_occupied()
 	_emit_stats()
 
 func _on_enemy_died(_enemy: Enemy, reward: int) -> void:
 	coins += reward
 	_emit_stats()
-	_check_wave_end.call_deferred()
+	_check_wave_end_after_tree_update()
 
 func _on_enemy_reached_goal(_enemy: Enemy, life_damage: int) -> void:
 	lives = max(lives - life_damage, 0)
@@ -124,10 +125,10 @@ func _on_enemy_reached_goal(_enemy: Enemy, life_damage: int) -> void:
 	if lives <= 0:
 		state_machine.transition_to(&"DefeatPhase")
 	else:
-		_check_wave_end.call_deferred()
+		_check_wave_end_after_tree_update()
 
 func _check_wave_end() -> void:
-	if spawning or enemy_path.get_child_count() > 0:
+	if spawning or _active_enemy_count() > 0:
 		return
 	if lives <= 0:
 		state_machine.transition_to(&"DefeatPhase")
@@ -136,6 +137,28 @@ func _check_wave_end() -> void:
 	else:
 		coins += waves[current_wave_index - 1].coin_bonus
 		state_machine.transition_to(&"BuildPhase")
+		_auto_start_next_wave.call_deferred()
 
 func _emit_stats() -> void:
 	stats_changed.emit(lives, coins, current_wave_index, waves.size())
+
+func _check_wave_end_after_tree_update() -> void:
+	await get_tree().process_frame
+	_check_wave_end()
+
+func _active_enemy_count() -> int:
+	var count := 0
+	for child: Node in enemy_path.get_children():
+		if not child.is_queued_for_deletion():
+			count += 1
+	return count
+
+func _auto_start_next_wave() -> void:
+	if auto_starting_next_wave or not has_more_waves():
+		return
+	auto_starting_next_wave = true
+	set_status("Next wave starts soon. Build quickly.")
+	await get_tree().create_timer(2.0).timeout
+	auto_starting_next_wave = false
+	if lives > 0 and has_more_waves() and state_machine.current_state and state_machine.current_state.name == &"BuildPhase":
+		state_machine.transition_to(&"WavePhase")

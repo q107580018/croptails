@@ -34,8 +34,8 @@ func set_start_wave_enabled(enabled: bool) -> void:
 	start_wave_button.disabled = not enabled
 
 
-func show_restart(visible: bool) -> void:
-	restart_button.visible = visible
+func show_restart(should_show: bool) -> void:
+	restart_button.visible = should_show
 
 
 func _on_stats_changed(lives: int, coins: int, wave: int, max_waves: int) -> void:

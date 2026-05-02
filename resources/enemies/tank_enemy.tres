@@ -12,5 +12,5 @@ reward = 14
 life_damage = 2
 sprite_texture = ExtResource("2")
 sprite_region = Rect2(0, 0, 16, 16)
-sprite_scale = Vector2(1, 1)
+sprite_scale = Vector2(0.35, 0.35)
 tint = Color(1, 1, 1, 1)

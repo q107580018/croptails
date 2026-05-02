@@ -6,7 +6,7 @@ signal reached_goal(enemy: Enemy, life_damage: int)
 
 @export var config: EnemyConfig
 
-@onready var sprite: Sprite2D = $Sprite2D
+@onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var health_bar: ProgressBar = $HealthBar
 
 var health: int = 1
@@ -36,11 +36,9 @@ func apply_config(new_config: EnemyConfig) -> void:
 	health = config.max_health
 	base_speed = config.speed
 	if is_node_ready():
-		sprite.texture = config.sprite_texture
-		sprite.region_enabled = true
-		sprite.region_rect = config.sprite_region
 		sprite.scale = config.sprite_scale
 		sprite.modulate = config.tint
+		sprite.play(&"run")
 		health_bar.max_value = config.max_health
 		health_bar.value = health
 
