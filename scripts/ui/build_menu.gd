@@ -45,7 +45,7 @@ func update_coins(coins: int) -> void:
 func hide_menu() -> void:
 	visible = false
 	selected_slot = null
-	current_tower_configs.clear()
+	current_tower_configs = []
 
 
 func _bind_nodes() -> void:

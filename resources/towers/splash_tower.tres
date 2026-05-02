@@ -8,13 +8,13 @@
 
 [resource]
 script = ExtResource("1")
-display_name = "Splash Tower"
+display_name = "Multi-shot Tower"
 role = 1
 cost = 80
 range = 95.0
 fire_rate = 0.75
 damage = 16
-splash_radius = 42.0
+multi_arrow_count = 3
 marker_color = Color(0.85, 0.42, 0.23, 1)
 menu_icon_texture = ExtResource("5_menu")
 idle_texture = ExtResource("2_idle")

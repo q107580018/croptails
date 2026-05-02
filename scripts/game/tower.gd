@@ -13,6 +13,8 @@ const SHOOT_FRAME_COUNT := 8
 @onready var range_shape: CollisionShape2D = $RangeShape
 
 var cooldown: float = 0.0
+var level: int = 1
+var built_on_slot: TowerSlot
 
 func _ready() -> void:
 	sprite.animation_finished.connect(_on_sprite_animation_finished)
@@ -26,7 +28,7 @@ func _process(delta: float) -> void:
 	var target := _find_target()
 	if target:
 		_attack(target)
-		cooldown = 1.0 / config.fire_rate
+		cooldown = 1.0 / _effective_fire_rate()
 
 func apply_config(new_config: TowerConfig) -> void:
 	config = new_config
@@ -35,7 +37,7 @@ func apply_config(new_config: TowerConfig) -> void:
 		sprite.sprite_frames = _build_sprite_frames()
 		sprite.play(&"idle")
 		var circle := CircleShape2D.new()
-		circle.radius = config.range
+		circle.radius = _effective_range()
 		range_shape.shape = circle
 
 func _find_target() -> Enemy:
@@ -50,28 +52,31 @@ func _find_target() -> Enemy:
 				best_distance = distance
 	return best
 
+func _find_targets(count: int) -> Array[Enemy]:
+	var enemies: Array[Enemy] = []
+	for area: Area2D in get_overlapping_areas():
+		var enemy := area.get_parent() as Enemy
+		if enemy:
+			enemies.append(enemy)
+	enemies.sort_custom(func(a: Enemy, b: Enemy): return a.distance_to_goal() < b.distance_to_goal())
+	return enemies.slice(0, count)
+
 func _attack(target: Enemy) -> void:
 	sprite.flip_h = target.global_position.x < global_position.x
 	sprite.play(&"shoot")
-	_spawn_projectile(target.global_position)
-	target.take_damage(config.damage)
 	match config.role:
-		TowerConfig.Role.SPLASH:
-			_apply_splash(target.global_position, target)
+		TowerConfig.Role.MULTI_SHOT:
+			var targets := _find_targets(config.multi_arrow_count)
+			for t: Enemy in targets:
+				_spawn_projectile(t.global_position)
+				t.take_damage(_effective_damage())
 		TowerConfig.Role.SLOW:
+			_spawn_projectile(target.global_position)
+			target.take_damage(_effective_damage())
 			target.apply_slow(config.slow_multiplier, config.slow_duration)
 		_:
-			pass
-
-func _apply_splash(center: Vector2, target: Enemy) -> void:
-	if config.splash_radius <= 0.0:
-		return
-	for node: Node in get_tree().get_nodes_in_group("enemies"):
-		if node is Enemy:
-			var enemy := node as Enemy
-			if enemy != target and enemy.global_position.distance_to(center) <= config.splash_radius:
-				enemy.take_damage(maxi(1, int(config.damage * 0.5)))
-
+			_spawn_projectile(target.global_position)
+			target.take_damage(_effective_damage())
 
 func _spawn_projectile(target_position: Vector2) -> void:
 	if config.projectile_texture == null:
@@ -89,6 +94,30 @@ func _projectile_parent() -> Node:
 			if projectiles:
 				return projectiles
 	return get_parent()
+
+func _effective_damage() -> int:
+	return int(roundi(config.damage * pow(config.upgrade_factor, level - 1)))
+
+func _effective_range() -> float:
+	return config.range * pow(1.08, level - 1)
+
+func _effective_fire_rate() -> float:
+	return config.fire_rate * pow(1.06, level - 1)
+
+func can_upgrade() -> bool:
+	return level < config.max_level
+
+func get_upgrade_cost() -> int:
+	return config.upgrade_cost * level
+
+func get_refund_value() -> int:
+	return int(config.cost * 0.8 + (level - 1) * config.upgrade_cost * 0.8)
+
+func upgrade() -> void:
+	level += 1
+	var circle := CircleShape2D.new()
+	circle.radius = _effective_range()
+	range_shape.shape = circle
 
 func _build_sprite_frames() -> SpriteFrames:
 	var frames := SpriteFrames.new()

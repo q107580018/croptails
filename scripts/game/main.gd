@@ -38,10 +38,13 @@ var spawning: bool = false
 func _ready() -> void:
 	hud.setup(self)
 	hud.build_selected.connect(_on_hud_build_selected)
+	hud.tower_upgrade.connect(_on_hud_tower_upgrade)
+	hud.tower_recycle.connect(_on_hud_tower_recycle)
 	for slot_node: Node in tower_slots.get_children():
 		if slot_node is TowerSlot:
 			var slot := slot_node as TowerSlot
 			slot.build_requested.connect(_on_slot_build_requested)
+			slot.tower_clicked.connect(_on_slot_tower_clicked)
 	state_machine.setup(self)
 	_emit_stats()
 	show_restart(false)
@@ -69,6 +72,7 @@ func spawn_current_wave() -> void:
 func set_building_enabled(enabled: bool) -> void:
 	if not enabled:
 		hud.hide_build_menu()
+		hud.hide_tower_action_menu()
 	for slot_node: Node in tower_slots.get_children():
 		if slot_node is TowerSlot:
 			(slot_node as TowerSlot).set_enabled(enabled)
@@ -100,8 +104,16 @@ func _spawn_enemy(config: EnemyConfig) -> void:
 	enemy_path.add_child(enemy)
 
 func _on_slot_build_requested(slot: TowerSlot) -> void:
+	hud.hide_tower_action_menu()
 	var menu_position := slot.get_global_transform_with_canvas().origin
 	hud.show_build_menu(slot, tower_configs, coins, menu_position)
+
+func _on_slot_tower_clicked(slot: TowerSlot) -> void:
+	hud.hide_build_menu()
+	var tower := slot.current_tower
+	if tower:
+		var menu_position := slot.get_global_transform_with_canvas().origin
+		hud.show_tower_action_menu(tower, coins, menu_position)
 
 func _on_hud_build_selected(slot: TowerSlot, tower_index: int) -> void:
 	if slot == null or slot.occupied:
@@ -115,10 +127,32 @@ func _on_hud_build_selected(slot: TowerSlot, tower_index: int) -> void:
 	coins -= config.cost
 	var tower := tower_scene.instantiate() as Tower
 	tower.config = config
+	tower.built_on_slot = slot
+	slot.current_tower = tower
 	towers.add_child(tower)
 	tower.global_position = slot.global_position
 	slot.mark_occupied()
 	hud.hide_build_menu()
+	_emit_stats()
+
+func _on_hud_tower_upgrade(tower: Tower) -> void:
+	if not tower.can_upgrade():
+		return
+	var cost := tower.get_upgrade_cost()
+	if coins < cost:
+		set_status("金币不足，无法升级 %s。" % tower.config.display_name)
+		return
+	coins -= cost
+	tower.upgrade()
+	hud.hide_tower_action_menu()
+	_emit_stats()
+
+func _on_hud_tower_recycle(tower: Tower) -> void:
+	var refund := tower.get_refund_value()
+	coins += refund
+	tower.built_on_slot.reset_slot()
+	tower.queue_free()
+	hud.hide_tower_action_menu()
 	_emit_stats()
 
 func _on_enemy_died(_enemy: Enemy, reward: int) -> void:

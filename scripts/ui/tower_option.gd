@@ -58,8 +58,8 @@ func _bind_nodes() -> void:
 
 func _localized_tower_name(config: TowerConfig) -> String:
 	match config.role:
-		TowerConfig.Role.SPLASH:
-			return "溅射塔"
+		TowerConfig.Role.MULTI_SHOT:
+			return "群攻塔"
 		TowerConfig.Role.SLOW:
 			return "减速塔"
 		_:
@@ -72,8 +72,8 @@ func _tower_description(config: TowerConfig) -> String:
 		"射%d" % int(config.range),
 		"速%.1f" % config.fire_rate,
 	]
-	if config.role == TowerConfig.Role.SPLASH:
-		parts.append("溅%d" % int(config.splash_radius))
+	if config.role == TowerConfig.Role.MULTI_SHOT:
+		parts.append("矢%d" % config.multi_arrow_count)
 	elif config.role == TowerConfig.Role.SLOW:
 		parts.append("减%.0f%% %.1fs" % [(1.0 - config.slow_multiplier) * 100.0, config.slow_duration])
 	return "  ".join(parts)

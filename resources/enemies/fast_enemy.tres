@@ -6,7 +6,7 @@
 [resource]
 script = ExtResource("1")
 display_name = "Fast Enemy"
-max_health = 24
+max_health = 48
 speed = 86.0
 reward = 7
 sprite_texture = ExtResource("2")

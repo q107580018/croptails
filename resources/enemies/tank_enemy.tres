@@ -6,7 +6,7 @@
 [resource]
 script = ExtResource("1")
 display_name = "Tank Enemy"
-max_health = 90
+max_health = 180
 speed = 38.0
 reward = 14
 life_damage = 2

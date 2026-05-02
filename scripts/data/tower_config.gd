@@ -1,7 +1,7 @@
 class_name TowerConfig
 extends Resource
 
-enum Role { ARROW, SPLASH, SLOW }
+enum Role { ARROW, MULTI_SHOT, SLOW }
 
 @export var display_name: String = "Tower"
 @export var role: Role = Role.ARROW
@@ -10,6 +10,7 @@ enum Role { ARROW, SPLASH, SLOW }
 @export var fire_rate: float = 1.0
 @export var damage: int = 8
 @export var splash_radius: float = 0.0
+@export var multi_arrow_count: int = 3
 @export_range(0.1, 1.0) var slow_multiplier: float = 1.0
 @export var slow_duration: float = 0.0
 @export var marker_color: Color = Color.WHITE
@@ -17,3 +18,6 @@ enum Role { ARROW, SPLASH, SLOW }
 @export var idle_texture: Texture2D
 @export var shoot_texture: Texture2D
 @export var projectile_texture: Texture2D
+@export var max_level: int = 3
+@export var upgrade_cost: int = 40
+@export var upgrade_factor: float = 1.25
