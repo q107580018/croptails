@@ -110,6 +110,14 @@ func can_upgrade() -> bool:
 func get_upgrade_cost() -> int:
 	return config.upgrade_cost * level
 
+func get_upgrade_preview() -> String:
+	if not can_upgrade():
+		return ""
+	var next_dmg := int(roundi(config.damage * pow(config.upgrade_factor, level)))
+	var next_range := config.range * pow(1.08, level)
+	var next_rate := config.fire_rate * pow(1.06, level)
+	return "伤%d→%d  射%d→%d  速%.1f→%.1f" % [_effective_damage(), next_dmg, int(_effective_range()), int(next_range), _effective_fire_rate(), next_rate]
+
 func get_refund_value() -> int:
 	return int(config.cost * 0.8 + (level - 1) * config.upgrade_cost * 0.8)
 

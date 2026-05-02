@@ -92,11 +92,12 @@ func restart() -> void:
 func _spawn_wave_entries(wave: WaveConfig) -> void:
 	for entry: WaveEntry in wave.entries:
 		for i: int in entry.count:
-			_spawn_enemy(entry.enemy)
+			_spawn_enemy(entry.enemy, entry.health_multiplier)
 			await get_tree().create_timer(entry.spawn_interval).timeout
 
-func _spawn_enemy(config: EnemyConfig) -> void:
+func _spawn_enemy(config: EnemyConfig, health_mult: float = 1.0) -> void:
 	var enemy := enemy_scene.instantiate() as Enemy
+	enemy.health_multiplier = health_mult
 	enemy.config = config
 	enemy.add_to_group("enemies")
 	enemy.died.connect(_on_enemy_died)

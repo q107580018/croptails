@@ -9,6 +9,7 @@ script = ExtResource("2")
 enemy = ExtResource("3")
 count = 12
 spawn_interval = 0.85
+health_multiplier = 1.0
 
 [resource]
 script = ExtResource("1")

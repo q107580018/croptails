@@ -23,6 +23,7 @@ var tower_action_upgrade: Button
 var tower_action_recycle: Button
 var tower_action_close: Button
 var tower_action_title: Label
+var tower_action_stats: Label
 var current_tower: Tower
 
 const ACTION_MENU_SIZE := Vector2(200, 140)
@@ -70,6 +71,8 @@ func show_tower_action_menu(tower: Tower, coins: int, target_position: Vector2) 
 	tower_action_upgrade.text = "升级 $%d" % up_cost if can_up else "已满级"
 	tower_action_upgrade.disabled = not can_up or coins < up_cost
 	tower_action_recycle.text = "回收 $%d" % tower.get_refund_value()
+	tower_action_stats.text = tower.get_upgrade_preview()
+	tower_action_stats.visible = can_up
 	tower_action_menu.position = _clamped_action_position(target_position)
 	tower_action_backdrop.visible = true
 	tower_action_menu.visible = true
@@ -174,6 +177,12 @@ func _create_tower_action_menu() -> void:
 	_style_close_button(tower_action_close)
 	header.add_child(tower_action_close)
 	vbox.add_child(header)
+
+	tower_action_stats = Label.new()
+	tower_action_stats.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	tower_action_stats.add_theme_color_override("font_color", Color(0.75, 0.82, 0.65))
+	tower_action_stats.add_theme_font_size_override("font_size", 12)
+	vbox.add_child(tower_action_stats)
 
 	tower_action_upgrade = Button.new()
 	tower_action_upgrade.custom_minimum_size = Vector2(0, 34)

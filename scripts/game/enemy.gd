@@ -15,8 +15,10 @@ var slow_multiplier: float = 1.0
 var slow_remaining: float = 0.0
 var escaped: bool = false
 var dead: bool = false
+var health_multiplier: float = 1.0
 
 func _ready() -> void:
+	loop = false
 	if config:
 		apply_config(config)
 
@@ -35,13 +37,13 @@ func _process(delta: float) -> void:
 
 func apply_config(new_config: EnemyConfig) -> void:
 	config = new_config
-	health = config.max_health
+	health = int(roundi(config.max_health * health_multiplier))
 	base_speed = config.speed
 	if is_node_ready():
 		sprite.scale = config.sprite_scale
 		sprite.modulate = config.tint
 		sprite.play(&"run")
-		health_bar.max_value = config.max_health
+		health_bar.max_value = health
 		health_bar.value = health
 
 func take_damage(amount: int) -> void:
