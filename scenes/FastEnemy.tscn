@@ -1,7 +1,7 @@
 [gd_scene load_steps=10 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/EnemyBase.tscn" id="1_base"]
-[ext_resource type="Texture2D" uid="uid://l28tql7elrhi" path="res://assets/Tiny Swords/Units/Black Units/Warrior/Warrior_Run.png" id="2_run"]
+[ext_resource type="Texture2D" uid="uid://ck7cpdjn17oi6" path="res://assets/Tiny Swords/Units/Black Units/Pawn/Pawn_Run.png" id="2_run"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_run_0"]
 atlas = ExtResource("2_run")
@@ -27,7 +27,7 @@ region = Rect2(768, 0, 192, 192)
 atlas = ExtResource("2_run")
 region = Rect2(960, 0, 192, 192)
 
-[sub_resource type="SpriteFrames" id="SpriteFrames_enemy_run"]
+[sub_resource type="SpriteFrames" id="SpriteFrames_fast_run"]
 animations = [{
 "frames": [{
 "duration": 1.0,
@@ -53,9 +53,9 @@ animations = [{
 "speed": 10.0
 }]
 
-[node name="Enemy" instance=ExtResource("1_base")]
+[node name="FastEnemy" instance=ExtResource("1_base")]
 
 [node name="AnimatedSprite2D" parent="."]
-sprite_frames = SubResource("SpriteFrames_enemy_run")
+sprite_frames = SubResource("SpriteFrames_fast_run")
 animation = &"run"
 autoplay = "run"

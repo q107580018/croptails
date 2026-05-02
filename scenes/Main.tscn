@@ -1,18 +1,148 @@
-[gd_scene format=3 uid="uid://dbag3lurfiiew"]
+[gd_scene format=4 uid="uid://dbag3lurfiiew"]
 
 [ext_resource type="Script" uid="uid://dsac6ao6xol7" path="res://scripts/state/state_machine.gd" id="1_sm"]
 [ext_resource type="Script" uid="uid://b0g07b827qel0" path="res://scripts/state/build_phase.gd" id="2_bp"]
+[ext_resource type="Texture2D" uid="uid://oaxri7dss47d" path="res://assets/Tiny Swords/Terrain/Resources/Wood/Trees/Tree1.png" id="2_ft6cd"]
+[ext_resource type="Texture2D" uid="uid://c8xi3ahjg1tib" path="res://assets/Tiny Swords/Terrain/Decorations/Bushes/Bushe1.png" id="3_bb450"]
 [ext_resource type="Script" uid="uid://bxdx7fevsot43" path="res://scripts/state/wave_phase.gd" id="3_wp"]
+[ext_resource type="Texture2D" uid="uid://dikqrd7ccvj3a" path="res://assets/Tiny Swords/Terrain/Decorations/Rocks/Rock1.png" id="4_nfivy"]
 [ext_resource type="Script" uid="uid://hjvvnrmn5smd" path="res://scripts/state/victory_phase.gd" id="4_vp"]
+[ext_resource type="Texture2D" uid="uid://d2yey81mutlvs" path="res://assets/Tiny Swords/Terrain/Decorations/Rocks/Rock2.png" id="5_1nqs0"]
 [ext_resource type="Script" uid="uid://hyrsf4rxf56a" path="res://scripts/state/defeat_phase.gd" id="5_dp"]
 [ext_resource type="Script" uid="uid://cyimmcypr7cys" path="res://scripts/game/main.gd" id="6_main"]
 [ext_resource type="Script" uid="uid://b7ry20j25i53i" path="res://scripts/ui/hud.gd" id="7_hud"]
-[ext_resource type="PackedScene" path="res://scenes/TowerSlot.tscn" id="8_slot"]
+[ext_resource type="PackedScene" uid="uid://s5f12843lwas" path="res://scenes/TowerSlot.tscn" id="8_slot"]
 [ext_resource type="Texture2D" uid="uid://32s7r74hqpnk" path="res://assets/game/objects/free_chicken_house.png" id="9_chicken"]
-[ext_resource type="Texture2D" uid="uid://4vmn5g7w08w8" path="res://assets/game/objects/paths.png" id="10_paths"]
-[ext_resource type="Texture2D" uid="uid://5a3qv4njl0yj" path="res://assets/game/tilesets/water.png" id="11_water"]
-[ext_resource type="Texture2D" uid="uid://ua8brkh8au33" path="res://assets/game/tilesets/fences.png" id="12_fences"]
-[ext_resource type="Texture2D" uid="uid://dppe0mjob4bcd" path="res://assets/game/objects/basic_grass_biom_things.png" id="13_grass_objects"]
+[ext_resource type="TileSet" uid="uid://8i86kmoax0yh" path="res://resources/tilesets/tiny_swords_terrain.tres" id="11_tileset"]
+[ext_resource type="TileSet" uid="uid://ds8rvdn38r04c" path="res://resources/tilesets/farm_path.tres" id="12_path_tileset"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1iba3"]
+atlas = ExtResource("2_ft6cd")
+region = Rect2(0, 0, 192, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yxlcp"]
+atlas = ExtResource("2_ft6cd")
+region = Rect2(192, 0, 192, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ebg2g"]
+atlas = ExtResource("2_ft6cd")
+region = Rect2(384, 0, 192, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2ofn6"]
+atlas = ExtResource("2_ft6cd")
+region = Rect2(576, 0, 192, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xa025"]
+atlas = ExtResource("2_ft6cd")
+region = Rect2(768, 0, 192, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_36rkl"]
+atlas = ExtResource("2_ft6cd")
+region = Rect2(960, 0, 192, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fs0b5"]
+atlas = ExtResource("2_ft6cd")
+region = Rect2(1152, 0, 192, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ma7h6"]
+atlas = ExtResource("2_ft6cd")
+region = Rect2(1344, 0, 192, 256)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_e2s0e"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1iba3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yxlcp")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ebg2g")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2ofn6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xa025")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_36rkl")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fs0b5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ma7h6")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gsxep"]
+atlas = ExtResource("3_bb450")
+region = Rect2(0, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_v0vrg"]
+atlas = ExtResource("3_bb450")
+region = Rect2(128, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dg70y"]
+atlas = ExtResource("3_bb450")
+region = Rect2(256, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pnhog"]
+atlas = ExtResource("3_bb450")
+region = Rect2(384, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2c4at"]
+atlas = ExtResource("3_bb450")
+region = Rect2(512, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_g6wdg"]
+atlas = ExtResource("3_bb450")
+region = Rect2(640, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hq6as"]
+atlas = ExtResource("3_bb450")
+region = Rect2(768, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kxyth"]
+atlas = ExtResource("3_bb450")
+region = Rect2(896, 0, 128, 128)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_cobve"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gsxep")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_v0vrg")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dg70y")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pnhog")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2c4at")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_g6wdg")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hq6as")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kxyth")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.5
+}]
 
 [sub_resource type="Curve2D" id="Curve2D_enemy"]
 _data = {
@@ -20,7 +150,7 @@ _data = {
 }
 point_count = 6
 
-[node name="root" type="Node2D" unique_id=1906210728]
+[node name="Main" type="Node2D" unique_id=1906210728]
 script = ExtResource("6_main")
 
 [node name="World" type="Node2D" parent="." unique_id=1322108413]
@@ -28,14 +158,17 @@ position = Vector2(40, 130)
 scale = Vector2(2, 2)
 
 [node name="Background" type="ColorRect" parent="World" unique_id=2028990558]
-offset_left = -20.0
-offset_top = -24.0
-offset_right = 430.0
-offset_bottom = 248.0
+z_index = -20
+offset_left = -52.0
+offset_top = -52.0
+offset_right = 478.0
+offset_bottom = 292.0
 mouse_filter = 2
-color = Color(0.36, 0.58, 0.29, 1)
+color = Color(0.28, 0.66, 0.65, 1)
 
 [node name="RoadSegments" type="Node2D" parent="World" unique_id=1029673469]
+visible = false
+z_index = -4
 
 [node name="RoadTop" type="ColorRect" parent="World/RoadSegments" unique_id=1324731876]
 offset_left = -8.0
@@ -43,7 +176,7 @@ offset_top = 30.0
 offset_right = 256.0
 offset_bottom = 50.0
 mouse_filter = 2
-color = Color(0.58, 0.38, 0.2, 1)
+color = Color(0.42, 0.31, 0.16, 0.82)
 
 [node name="RoadRightDrop" type="ColorRect" parent="World/RoadSegments" unique_id=1230367133]
 offset_left = 238.0
@@ -51,7 +184,7 @@ offset_top = 40.0
 offset_right = 258.0
 offset_bottom = 130.0
 mouse_filter = 2
-color = Color(0.58, 0.38, 0.2, 1)
+color = Color(0.42, 0.31, 0.16, 0.82)
 
 [node name="RoadMiddle" type="ColorRect" parent="World/RoadSegments" unique_id=277500277]
 offset_left = 96.0
@@ -59,7 +192,7 @@ offset_top = 110.0
 offset_right = 258.0
 offset_bottom = 130.0
 mouse_filter = 2
-color = Color(0.58, 0.38, 0.2, 1)
+color = Color(0.42, 0.31, 0.16, 0.82)
 
 [node name="RoadLeftDrop" type="ColorRect" parent="World/RoadSegments" unique_id=618080361]
 offset_left = 94.0
@@ -67,7 +200,7 @@ offset_top = 120.0
 offset_right = 114.0
 offset_bottom = 194.0
 mouse_filter = 2
-color = Color(0.58, 0.38, 0.2, 1)
+color = Color(0.42, 0.31, 0.16, 0.82)
 
 [node name="RoadBottom" type="ColorRect" parent="World/RoadSegments" unique_id=180322617]
 offset_left = 96.0
@@ -75,91 +208,77 @@ offset_top = 174.0
 offset_right = 384.0
 offset_bottom = 194.0
 mouse_filter = 2
-color = Color(0.58, 0.38, 0.2, 1)
+color = Color(0.42, 0.31, 0.16, 0.82)
+
+[node name="PathMap" type="TileMapLayer" parent="World" unique_id=521956469]
+z_index = -5
+tile_map_data = PackedByteArray("AAD//wIAAAAAAAMAAAAFAAIAAAABAAMAAAAGAAIAAAABAAMAAAAHAAIAAAABAAMAAAAIAAIAAAABAAMAAAAJAAIAAAABAAMAAAAKAAIAAAABAAMAAAALAAIAAAABAAMAAAAMAAIAAAABAAMAAAANAAIAAAABAAMAAAAOAAIAAAABAAMAAAAPAAIAAAAHAAAAAAAQAAMAAAACAAQAAAAGAAcAAAAEAAAAAAAHAAcAAAABAAMAAAAIAAcAAAABAAMAAAAJAAcAAAABAAMAAAAKAAcAAAABAAMAAAALAAcAAAABAAMAAAAMAAcAAAABAAMAAAANAAcAAAABAAMAAAAOAAcAAAABAAMAAAAIAAsAAAABAAMAAAAJAAsAAAABAAMAAAAKAAsAAAABAAMAAAALAAsAAAABAAMAAAAMAAsAAAABAAMAAAANAAsAAAABAAMAAAAOAAsAAAABAAMAAAAPAAsAAAABAAMAAAAQAAsAAAABAAMAAAARAAsAAAABAAMAAAASAAsAAAABAAMAAAATAAsAAAABAAMAAAAUAAsAAAABAAMAAAAVAAsAAAABAAMAAAAWAAsAAAABAAMAAAAXAAsAAAABAAMAAAAYAAsAAAACAAQAAAAAAAIAAAABAAMAAAABAAIAAAABAAMAAAACAAIAAAABAAMAAAADAAIAAAABAAMAAAAEAAIAAAABAAMAAAAPAAMAAAADAAEAAAAPAAQAAAADAAEAAAAPAAUAAAADAAEAAAAPAAYAAAADAAEAAAAPAAcAAAAHAAMAAAAGAAsAAAAEAAMAAAAGAAgAAAADAAEAAAAGAAkAAAADAAEAAAAGAAoAAAADAAEAAAAHAAsAAAABAAMAAAA=")
+tile_set = ExtResource("12_path_tileset")
 
 [node name="Decor" type="Node2D" parent="World" unique_id=370219348]
+z_index = -3
 
-[node name="WaterSouth" type="Sprite2D" parent="World/Decor" unique_id=2140756454]
-position = Vector2(44, 224)
-texture = ExtResource("11_water")
-region_enabled = true
-region_rect = Rect2(0, 0, 64, 16)
+[node name="TreeNorthWest" type="AnimatedSprite2D" parent="World/Decor" unique_id=2005836841]
+position = Vector2(13, 71)
+scale = Vector2(0.42, 0.42)
+sprite_frames = SubResource("SpriteFrames_e2s0e")
+animation = &"idle"
+autoplay = "idle"
 
-[node name="WaterSouth2" type="Sprite2D" parent="World/Decor" unique_id=133885105]
-position = Vector2(108, 224)
-texture = ExtResource("11_water")
-region_enabled = true
-region_rect = Rect2(0, 0, 64, 16)
+[node name="TreeNorthEast" type="AnimatedSprite2D" parent="World/Decor" unique_id=661775849]
+position = Vector2(356, 4)
+scale = Vector2(0.42, 0.42)
+sprite_frames = SubResource("SpriteFrames_e2s0e")
+animation = &"idle"
+autoplay = "idle"
+frame = 2
 
-[node name="WaterSouth3" type="Sprite2D" parent="World/Decor" unique_id=1506627247]
-position = Vector2(172, 224)
-texture = ExtResource("11_water")
-region_enabled = true
-region_rect = Rect2(0, 0, 64, 16)
+[node name="TreeSouthWest" type="AnimatedSprite2D" parent="World/Decor" unique_id=568788735]
+position = Vector2(12, 196)
+scale = Vector2(0.36, 0.36)
+sprite_frames = SubResource("SpriteFrames_e2s0e")
+animation = &"idle"
+autoplay = "idle"
+frame = 4
 
-[node name="WaterSouth4" type="Sprite2D" parent="World/Decor" unique_id=1182396829]
-position = Vector2(236, 224)
-texture = ExtResource("11_water")
-region_enabled = true
-region_rect = Rect2(0, 0, 64, 16)
+[node name="BushNorth" type="AnimatedSprite2D" parent="World/Decor" unique_id=1219690687]
+position = Vector2(107, -7)
+scale = Vector2(0.5, 0.5)
+sprite_frames = SubResource("SpriteFrames_cobve")
+animation = &"idle"
+autoplay = "idle"
 
-[node name="FenceNorth1" type="Sprite2D" parent="World/Decor" unique_id=453594100]
-position = Vector2(48, 0)
-texture = ExtResource("12_fences")
-region_enabled = true
-region_rect = Rect2(0, 0, 64, 64)
+[node name="BushEast" type="AnimatedSprite2D" parent="World/Decor" unique_id=1723757114]
+position = Vector2(352, 124)
+scale = Vector2(0.48, 0.48)
+sprite_frames = SubResource("SpriteFrames_cobve")
+animation = &"idle"
+autoplay = "idle"
+frame = 2
 
-[node name="FenceNorth2" type="Sprite2D" parent="World/Decor" unique_id=1650155659]
-position = Vector2(112, 0)
-texture = ExtResource("12_fences")
-region_enabled = true
-region_rect = Rect2(0, 0, 64, 64)
+[node name="BushSouth" type="AnimatedSprite2D" parent="World/Decor" unique_id=1682124273]
+position = Vector2(203, 253)
+scale = Vector2(0.46, 0.46)
+sprite_frames = SubResource("SpriteFrames_cobve")
+animation = &"idle"
+autoplay = "idle"
+frame = 4
 
-[node name="FenceNorth3" type="Sprite2D" parent="World/Decor" unique_id=1676982962]
-position = Vector2(176, 0)
-texture = ExtResource("12_fences")
-region_enabled = true
-region_rect = Rect2(0, 0, 64, 64)
+[node name="RockWest" type="Sprite2D" parent="World/Decor" unique_id=1731262161]
+position = Vector2(34, 132)
+scale = Vector2(0.72, 0.72)
+texture = ExtResource("4_nfivy")
 
-[node name="PathDetailTop" type="Sprite2D" parent="World/Decor" unique_id=918096133]
-position = Vector2(48, 58)
-scale = Vector2(0.7, 0.7)
-texture = ExtResource("10_paths")
-region_enabled = true
-region_rect = Rect2(0, 0, 64, 64)
-
-[node name="PathDetailMiddle" type="Sprite2D" parent="World/Decor" unique_id=1793469504]
-position = Vector2(190, 140)
-scale = Vector2(0.7, 0.7)
-texture = ExtResource("10_paths")
-region_enabled = true
-region_rect = Rect2(0, 0, 64, 64)
-
-[node name="GrassClump01" type="Sprite2D" parent="World/Decor" unique_id=1201864109]
-position = Vector2(42, 88)
-texture = ExtResource("13_grass_objects")
-region_enabled = true
-region_rect = Rect2(0, 0, 16, 32)
-
-[node name="GrassClump02" type="Sprite2D" parent="World/Decor" unique_id=2055554316]
-position = Vector2(196, 86)
-texture = ExtResource("13_grass_objects")
-region_enabled = true
-region_rect = Rect2(16, 0, 32, 32)
-
-[node name="GrassClump03" type="Sprite2D" parent="World/Decor" unique_id=1574971394]
-position = Vector2(330, 134)
-texture = ExtResource("13_grass_objects")
-region_enabled = true
-region_rect = Rect2(48, 0, 32, 32)
-
-[node name="MushroomPatch" type="Sprite2D" parent="World/Decor" unique_id=1296840130]
-position = Vector2(56, 170)
-texture = ExtResource("13_grass_objects")
-region_enabled = true
-region_rect = Rect2(32, 48, 48, 16)
+[node name="RockNorth" type="Sprite2D" parent="World/Decor" unique_id=2088573599]
+position = Vector2(286, 22)
+scale = Vector2(0.68, 0.68)
+texture = ExtResource("5_1nqs0")
 
 [node name="Map" type="TileMapLayer" parent="World" unique_id=1806014128]
+z_index = -10
+position = Vector2(-32, -32)
+tile_map_data = PackedByteArray("AAAAAAAAAAAAAAAAAAABAAAAAAABAAAAAAACAAAAAAABAAAAAAADAAAAAAABAAAAAAAEAAAAAAABAAAAAAAFAAAAAAABAAAAAAAGAAAAAAABAAAAAAAHAAAAAAACAAAAAAAAAAEAAAAAAAEAAAABAAEAAAABAAEAAAACAAEAAAABAAEAAAADAAEAAAABAAEAAAAEAAEAAAABAAEAAAAFAAEAAAABAAEAAAAGAAEAAAABAAEAAAAHAAEAAAACAAEAAAAAAAIAAAAAAAEAAAABAAIAAAABAAEAAAACAAIAAAABAAEAAAADAAIAAAABAAEAAAAEAAIAAAABAAEAAAAFAAIAAAABAAEAAAAGAAIAAAABAAEAAAAHAAIAAAACAAEAAAAAAAMAAAAAAAEAAAABAAMAAAABAAEAAAACAAMAAAABAAEAAAADAAMAAAABAAEAAAAEAAMAAAABAAEAAAAFAAMAAAABAAEAAAAGAAMAAAABAAEAAAAHAAMAAAACAAEAAAAAAAQAAAAAAAIAAAABAAQAAAABAAIAAAACAAQAAAABAAIAAAADAAQAAAABAAIAAAAEAAQAAAABAAIAAAAFAAQAAAABAAIAAAAGAAQAAAABAAIAAAAHAAQAAAACAAIAAAA=")
+tile_set = ExtResource("11_tileset")
 
 [node name="EnemyPath" type="Path2D" parent="World" unique_id=110740544]
 curve = SubResource("Curve2D_enemy")
@@ -167,46 +286,82 @@ curve = SubResource("Curve2D_enemy")
 [node name="TowerSlots" type="Node2D" parent="World" unique_id=1656303724]
 
 [node name="Slot01" parent="World/TowerSlots" unique_id=411594594 instance=ExtResource("8_slot")]
-position = Vector2(80, 72)
+position = Vector2(84, 62)
 
 [node name="Slot02" parent="World/TowerSlots" unique_id=696830187 instance=ExtResource("8_slot")]
-position = Vector2(160, 72)
+position = Vector2(160, 62)
 
 [node name="Slot03" parent="World/TowerSlots" unique_id=31941829 instance=ExtResource("8_slot")]
-position = Vector2(221.5, 94)
+position = Vector2(222, 98)
 
 [node name="Slot04" parent="World/TowerSlots" unique_id=1187132926 instance=ExtResource("8_slot")]
-position = Vector2(176, 160)
+position = Vector2(134.5, 159)
 
 [node name="Slot05" parent="World/TowerSlots" unique_id=1184236872 instance=ExtResource("8_slot")]
-position = Vector2(72, 152)
+position = Vector2(80.5, 170.5)
 
 [node name="Slot06" parent="World/TowerSlots" unique_id=406210014 instance=ExtResource("8_slot")]
-position = Vector2(136, 200)
+position = Vector2(120, 205)
 
 [node name="Slot07" parent="World/TowerSlots" unique_id=565865912 instance=ExtResource("8_slot")]
-position = Vector2(232, 160)
+position = Vector2(177, 158)
 
 [node name="Slot08" parent="World/TowerSlots" unique_id=303323577 instance=ExtResource("8_slot")]
-position = Vector2(304, 160)
+position = Vector2(219, 158)
 
 [node name="Slot09" parent="World/TowerSlots" unique_id=1419525746 instance=ExtResource("8_slot")]
-position = Vector2(122, 72)
+position = Vector2(121.5, 62)
 
 [node name="Slot10" parent="World/TowerSlots" unique_id=939035318 instance=ExtResource("8_slot")]
-position = Vector2(222, 74)
+position = Vector2(222, 62.5)
 
 [node name="Slot11" parent="World/TowerSlots" unique_id=358174180 instance=ExtResource("8_slot")]
 position = Vector2(234, 18)
 
 [node name="Slot12" parent="World/TowerSlots" unique_id=568029893 instance=ExtResource("8_slot")]
-position = Vector2(281, 48)
+position = Vector2(272.5, 48)
 
 [node name="Slot13" parent="World/TowerSlots" unique_id=1928108163 instance=ExtResource("8_slot")]
-position = Vector2(284, 86)
+position = Vector2(272.5, 81)
 
 [node name="Slot14" parent="World/TowerSlots" unique_id=1381801928 instance=ExtResource("8_slot")]
-position = Vector2(285, 123)
+position = Vector2(272.5, 113.5)
+
+[node name="Slot15" parent="World/TowerSlots" unique_id=1684408198 instance=ExtResource("8_slot")]
+position = Vector2(196, 18)
+
+[node name="Slot16" parent="World/TowerSlots" unique_id=750364301 instance=ExtResource("8_slot")]
+position = Vector2(160, 18)
+
+[node name="Slot17" parent="World/TowerSlots" unique_id=1505558003 instance=ExtResource("8_slot")]
+position = Vector2(123, 18.5)
+
+[node name="Slot18" parent="World/TowerSlots" unique_id=70432801 instance=ExtResource("8_slot")]
+position = Vector2(85.5, 18)
+
+[node name="Slot19" parent="World/TowerSlots" unique_id=1291350990 instance=ExtResource("8_slot")]
+position = Vector2(191.5, 62.5)
+
+[node name="Slot20" parent="World/TowerSlots" unique_id=1372863267 instance=ExtResource("8_slot")]
+position = Vector2(191, 98)
+
+[node name="Slot21" parent="World/TowerSlots" unique_id=1146488492 instance=ExtResource("8_slot")]
+position = Vector2(158, 98)
+
+[node name="Slot22" parent="World/TowerSlots" unique_id=1954274747 instance=ExtResource("8_slot")]
+position = Vector2(122.5, 97)
+
+[node name="Slot23" parent="World/TowerSlots" unique_id=619885627 instance=ExtResource("8_slot")]
+position = Vector2(80.5, 137)
+
+[node name="Slot24" parent="World/TowerSlots" unique_id=2014531725 instance=ExtResource("8_slot")]
+position = Vector2(159.5, 205.5)
+
+[node name="Slot26" parent="World/TowerSlots" unique_id=1173807544 instance=ExtResource("8_slot")]
+position = Vector2(82.5, 99.5)
+
+[node name="Slot25" parent="World/TowerSlots" unique_id=1547473819 instance=ExtResource("8_slot")]
+position = Vector2(80, 204.5)
 
 [node name="FarmTarget" type="Sprite2D" parent="World" unique_id=684925731]
 position = Vector2(392, 176)
@@ -311,5 +466,5 @@ offset_top = 124.0
 offset_right = 400.0
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=791127260]
-position = Vector2(455, 346)
-zoom = Vector2(1.17, 1.17)
+position = Vector2(475, 364)
+zoom = Vector2(0.98, 0.98)

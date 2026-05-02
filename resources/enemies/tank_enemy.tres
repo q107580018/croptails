@@ -2,13 +2,15 @@
 
 [ext_resource type="Script" uid="uid://dq5euhw15p5he" path="res://scripts/data/enemy_config.gd" id="1"]
 [ext_resource type="Texture2D" uid="uid://bixjxaaxhi0ok" path="res://assets/game/characters/free_cow_sprites.png" id="2"]
+[ext_resource type="PackedScene" path="res://scenes/TankEnemy.tscn" id="3_tank_scene"]
 
 [resource]
 script = ExtResource("1")
 display_name = "Tank Enemy"
-max_health = 90
+max_health = 360
 speed = 38.0
 reward = 14
 life_damage = 2
+enemy_scene = ExtResource("3_tank_scene")
 sprite_texture = ExtResource("2")
 sprite_scale = Vector2(0.35, 0.35)

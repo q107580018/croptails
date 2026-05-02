@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://cpvhpb2rf00dd" path="res://assets/Tiny Swords/Units/Blue Units/Archer/Archer_Idle.png" id="2_idle"]
 [ext_resource type="Texture2D" uid="uid://c3plp4fsoqpwi" path="res://assets/Tiny Swords/Units/Blue Units/Archer/Archer_Shoot.png" id="3_shoot"]
 [ext_resource type="Texture2D" uid="uid://djcjw2i82dn1j" path="res://assets/Tiny Swords/Units/Blue Units/Archer/Arrow.png" id="4_arrow"]
-[ext_resource type="Texture2D" path="res://assets/ui/tower_icons/slow_tower_icon.png" id="5_menu"]
+[ext_resource type="Texture2D" uid="uid://bjntmvd2rx3dt" path="res://assets/ui/tower_icons/slow_tower_icon.png" id="5_menu"]
 
 [resource]
 script = ExtResource("1")

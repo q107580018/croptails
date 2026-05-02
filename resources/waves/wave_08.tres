@@ -8,16 +8,16 @@
 [sub_resource type="Resource" id="Resource_1"]
 script = ExtResource("2")
 enemy = ExtResource("3")
-count = 56
-spawn_interval = 0.45
-health_multiplier = 3.8
+count = 68
+spawn_interval = 0.34
+health_multiplier = 4.4
 
 [sub_resource type="Resource" id="Resource_2"]
 script = ExtResource("2")
 enemy = ExtResource("4")
-count = 16
-spawn_interval = 0.75
-health_multiplier = 3.8
+count = 24
+spawn_interval = 0.55
+health_multiplier = 4.4
 
 [resource]
 script = ExtResource("1")

@@ -1,5 +1,5 @@
 class_name Enemy
-extends PathFollow2D
+extends Node2D
 
 signal died(enemy: Enemy, reward: int)
 signal reached_goal(enemy: Enemy, life_damage: int)
@@ -16,11 +16,12 @@ var slow_remaining: float = 0.0
 var escaped: bool = false
 var dead: bool = false
 var health_multiplier: float = 1.0
+var path_progress: float = 0.0
 
 func _ready() -> void:
-	loop = false
 	if config:
 		apply_config(config)
+	_update_path_position()
 
 func _process(delta: float) -> void:
 	if slow_remaining > 0.0:
@@ -28,9 +29,10 @@ func _process(delta: float) -> void:
 		if slow_remaining == 0.0:
 			slow_multiplier = 1.0
 	var previous_position := global_position
-	progress += base_speed * slow_multiplier * delta
+	path_progress += base_speed * slow_multiplier * delta
+	_update_path_position()
 	_update_facing(global_position - previous_position)
-	if progress_ratio >= 1.0 and not escaped:
+	if _path_progress_ratio() >= 1.0 and not escaped:
 		escaped = true
 		reached_goal.emit(self, config.life_damage if config else 1)
 		queue_free()
@@ -62,7 +64,23 @@ func apply_slow(multiplier: float, duration: float) -> void:
 	slow_remaining = maxf(slow_remaining, duration)
 
 func distance_to_goal() -> float:
-	return 1.0 - progress_ratio
+	return 1.0 - _path_progress_ratio()
+
+func _update_path_position() -> void:
+	var path := get_parent() as Path2D
+	if path == null or path.curve == null:
+		return
+	var path_length := path.curve.get_baked_length()
+	position = path.curve.sample_baked(clampf(path_progress, 0.0, path_length))
+
+func _path_progress_ratio() -> float:
+	var path := get_parent() as Path2D
+	if path == null or path.curve == null:
+		return 0.0
+	var path_length := path.curve.get_baked_length()
+	if path_length <= 0.0:
+		return 1.0
+	return clampf(path_progress / path_length, 0.0, 1.0)
 
 func _update_facing(movement: Vector2) -> void:
 	if movement.length_squared() <= 0.0001:

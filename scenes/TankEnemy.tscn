@@ -1,7 +1,7 @@
-[gd_scene load_steps=10 format=3]
+[gd_scene load_steps=8 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/EnemyBase.tscn" id="1_base"]
-[ext_resource type="Texture2D" uid="uid://l28tql7elrhi" path="res://assets/Tiny Swords/Units/Black Units/Warrior/Warrior_Run.png" id="2_run"]
+[ext_resource type="Texture2D" uid="uid://du25b2s0olr4w" path="res://assets/Tiny Swords/Units/Black Units/Monk/Run.png" id="2_run"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_run_0"]
 atlas = ExtResource("2_run")
@@ -19,15 +19,7 @@ region = Rect2(384, 0, 192, 192)
 atlas = ExtResource("2_run")
 region = Rect2(576, 0, 192, 192)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_run_4"]
-atlas = ExtResource("2_run")
-region = Rect2(768, 0, 192, 192)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_run_5"]
-atlas = ExtResource("2_run")
-region = Rect2(960, 0, 192, 192)
-
-[sub_resource type="SpriteFrames" id="SpriteFrames_enemy_run"]
+[sub_resource type="SpriteFrames" id="SpriteFrames_tank_run"]
 animations = [{
 "frames": [{
 "duration": 1.0,
@@ -41,21 +33,15 @@ animations = [{
 }, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_run_3")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_run_4")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_run_5")
 }],
 "loop": true,
 "name": &"run",
 "speed": 10.0
 }]
 
-[node name="Enemy" instance=ExtResource("1_base")]
+[node name="TankEnemy" instance=ExtResource("1_base")]
 
 [node name="AnimatedSprite2D" parent="."]
-sprite_frames = SubResource("SpriteFrames_enemy_run")
+sprite_frames = SubResource("SpriteFrames_tank_run")
 animation = &"run"
 autoplay = "run"
