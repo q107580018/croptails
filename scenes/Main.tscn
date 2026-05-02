@@ -154,6 +154,7 @@ point_count = 6
 script = ExtResource("6_main")
 
 [node name="World" type="Node2D" parent="." unique_id=1322108413]
+unique_name_in_owner = true
 position = Vector2(40, 130)
 scale = Vector2(2, 2)
 
@@ -281,9 +282,11 @@ tile_map_data = PackedByteArray("AAAAAAAAAAAAAAAAAAABAAAAAAABAAAAAAACAAAAAAABAAA
 tile_set = ExtResource("11_tileset")
 
 [node name="EnemyPath" type="Path2D" parent="World" unique_id=110740544]
+unique_name_in_owner = true
 curve = SubResource("Curve2D_enemy")
 
 [node name="TowerSlots" type="Node2D" parent="World" unique_id=1656303724]
+unique_name_in_owner = true
 
 [node name="Slot01" parent="World/TowerSlots" unique_id=411594594 instance=ExtResource("8_slot")]
 position = Vector2(84, 62)
@@ -371,12 +374,15 @@ region_enabled = true
 region_rect = Rect2(0, 0, 47.5, 49.25)
 
 [node name="Towers" type="Node2D" parent="World" unique_id=1802146912]
+unique_name_in_owner = true
 
 [node name="Enemies" type="Node2D" parent="World" unique_id=2028182206]
 
 [node name="Projectiles" type="Node2D" parent="World" unique_id=2041062928]
+unique_name_in_owner = true
 
 [node name="GameStateMachine" type="Node" parent="." unique_id=859263180]
+unique_name_in_owner = true
 script = ExtResource("1_sm")
 
 [node name="BuildPhase" type="Node" parent="GameStateMachine" unique_id=1154806424]
@@ -394,6 +400,7 @@ script = ExtResource("5_dp")
 [node name="UI" type="CanvasLayer" parent="." unique_id=925799140]
 
 [node name="Hud" type="Control" parent="UI" unique_id=2009209633]
+unique_name_in_owner = true
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0

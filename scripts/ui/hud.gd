@@ -70,7 +70,7 @@ func show_tower_action_menu(tower: Tower, coins: int, target_position: Vector2) 
 	current_tower = tower
 	var can_up := tower.can_upgrade()
 	var up_cost := tower.get_upgrade_cost()
-	tower_action_title.text = "%s Lv.%d" % [_localized_name(tower.config), tower.level]
+	tower_action_title.text = "%s Lv.%d" % [tower.config.localized_name(), tower.level]
 	tower_action_upgrade.text = "升级 $%d" % up_cost if can_up else "已满级"
 	tower_action_upgrade.disabled = not can_up or coins < up_cost
 	tower_action_recycle.text = "回收 $%d" % tower.get_refund_value()
@@ -224,18 +224,6 @@ func _on_upgrade_pressed() -> void:
 func _on_recycle_pressed() -> void:
 	if current_tower:
 		tower_recycle.emit(current_tower)
-
-
-func _localized_name(config: TowerConfig) -> String:
-	match config.role:
-		TowerConfig.Role.MULTI_SHOT:
-			return "群攻塔"
-		TowerConfig.Role.SLOW:
-			return "减速塔"
-		TowerConfig.Role.MELEE_LINE:
-			return "长矛塔"
-		_:
-			return "箭塔"
 
 
 func _clamped_action_position(target_position: Vector2) -> Vector2:

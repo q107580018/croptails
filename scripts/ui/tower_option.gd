@@ -33,7 +33,7 @@ func setup(config: TowerConfig, index: int, coins: int) -> void:
 	tower_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	tower_icon.show()
 	tower_icon.queue_redraw()
-	title_label.text = "%s  $%d" % [_localized_tower_name(config), config.cost]
+	title_label.text = "%s  $%d" % [config.localized_name(), config.cost]
 	description_label.text = _tower_description(config)
 	update_affordability(coins)
 
@@ -49,25 +49,13 @@ func update_affordability(coins: int) -> void:
 
 func _bind_nodes() -> void:
 	if icon_frame == null:
-		icon_frame = get_node("Row/IconFrame") as Control
+		icon_frame = %IconFrame
 	if tower_icon == null:
-		tower_icon = get_node("Row/IconFrame/Icon") as TextureRect
+		tower_icon = %Icon
 	if title_label == null:
-		title_label = get_node("Row/Details/TitleLabel") as Label
+		title_label = %TitleLabel
 	if description_label == null:
-		description_label = get_node("Row/Details/DescriptionLabel") as Label
-
-
-func _localized_tower_name(config: TowerConfig) -> String:
-	match config.role:
-		TowerConfig.Role.MULTI_SHOT:
-			return "群攻塔"
-		TowerConfig.Role.SLOW:
-			return "减速塔"
-		TowerConfig.Role.MELEE_LINE:
-			return "长矛塔"
-		_:
-			return "箭塔"
+		description_label = %DescriptionLabel
 
 
 func _tower_description(config: TowerConfig) -> String:

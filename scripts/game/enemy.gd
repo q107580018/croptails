@@ -17,10 +17,16 @@ var escaped: bool = false
 var dead: bool = false
 var health_multiplier: float = 1.0
 var path_progress: float = 0.0
+var _baked_path_length: float = 0.0
+
+const MOVEMENT_EPSILON: float = 0.0001
 
 func _ready() -> void:
 	if config:
 		apply_config(config)
+	var path := get_parent() as Path2D
+	if path and path.curve:
+		_baked_path_length = path.curve.get_baked_length()
 	_update_path_position()
 
 func _process(delta: float) -> void:
@@ -70,20 +76,15 @@ func _update_path_position() -> void:
 	var path := get_parent() as Path2D
 	if path == null or path.curve == null:
 		return
-	var path_length := path.curve.get_baked_length()
-	position = path.curve.sample_baked(clampf(path_progress, 0.0, path_length))
+	position = path.curve.sample_baked(clampf(path_progress, 0.0, _baked_path_length))
 
 func _path_progress_ratio() -> float:
-	var path := get_parent() as Path2D
-	if path == null or path.curve == null:
-		return 0.0
-	var path_length := path.curve.get_baked_length()
-	if path_length <= 0.0:
+	if _baked_path_length <= 0.0:
 		return 1.0
-	return clampf(path_progress / path_length, 0.0, 1.0)
+	return clampf(path_progress / _baked_path_length, 0.0, 1.0)
 
 func _update_facing(movement: Vector2) -> void:
-	if movement.length_squared() <= 0.0001:
+	if movement.length_squared() <= MOVEMENT_EPSILON:
 		return
 	if absf(movement.x) > absf(movement.y):
 		sprite.flip_h = movement.x < 0.0

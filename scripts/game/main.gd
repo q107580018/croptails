@@ -4,7 +4,8 @@ extends Node2D
 signal stats_changed(lives: int, coins: int, wave: int, max_waves: int)
 signal status_changed(text: String)
 
-const RangePreviewScene := preload("res://scripts/game/range_preview.gd")
+const RANGE_PREVIEW_SCENE := preload("res://scripts/game/range_preview.gd")
+const WAVE_END_CHECK_DELAY := 0.3
 
 @export var tower_scene: PackedScene = preload("res://scenes/Tower.tscn")
 @export var enemy_scene: PackedScene = preload("res://scenes/Enemy.tscn")
@@ -27,19 +28,19 @@ const RangePreviewScene := preload("res://scripts/game/range_preview.gd")
 	preload("res://resources/waves/wave_10.tres"),
 ]
 
-@onready var enemy_path: Path2D = $World/EnemyPath
-@onready var tower_slots: Node2D = $World/TowerSlots
-@onready var towers: Node2D = $World/Towers
-@onready var world: Node2D = $World
-@onready var state_machine: StateMachine = $GameStateMachine
-@onready var hud: Hud = $UI/Hud
+@onready var enemy_path: Path2D = %EnemyPath
+@onready var tower_slots: Node2D = %TowerSlots
+@onready var towers: Node2D = %Towers
+@onready var world: Node2D = %World
+@onready var state_machine: StateMachine = %GameStateMachine
+@onready var hud: Hud = %Hud
 
 var lives: int = 20
 var coins: int = 180
 var current_wave_index: int = 0
 var spawning: bool = false
 var game_over: bool = false
-var range_preview
+var range_preview: RangePreview
 
 func _ready() -> void:
 	hud.setup(self)
@@ -80,7 +81,7 @@ func spawn_current_wave() -> void:
 	spawning = false
 	if game_over:
 		return
-	await get_tree().create_timer(0.3).timeout
+	await get_tree().create_timer(WAVE_END_CHECK_DELAY).timeout
 	_check_wave_end()
 
 func set_building_enabled(enabled: bool) -> void:
@@ -118,7 +119,6 @@ func _spawn_enemy(config: EnemyConfig, health_mult: float = 1.0) -> void:
 	var enemy := scene.instantiate() as Enemy
 	enemy.health_multiplier = health_mult
 	enemy.config = config
-	enemy.add_to_group("enemies")
 	enemy.died.connect(_on_enemy_died)
 	enemy.reached_goal.connect(_on_enemy_reached_goal)
 	enemy_path.add_child(enemy)
@@ -175,7 +175,6 @@ func _on_hud_tower_recycle(tower: Tower) -> void:
 	var refund := tower.get_refund_value()
 	coins += refund
 	_hide_range_preview()
-	tower.built_on_slot.reset_slot()
 	tower.queue_free()
 	hud.hide_tower_action_menu()
 	_emit_stats()
@@ -187,7 +186,7 @@ func _on_build_option_hover_started(slot: TowerSlot, config: TowerConfig) -> voi
 	_show_range_preview(slot.global_position, config.range, config.marker_color)
 
 func _create_range_preview() -> void:
-	range_preview = RangePreviewScene.new()
+	range_preview = RANGE_PREVIEW_SCENE.new()
 	range_preview.z_index = 1
 	range_preview.visible = false
 	world.add_child(range_preview)
@@ -200,7 +199,7 @@ func _show_range_preview(global_position: Vector2, radius: float, color: Color) 
 
 
 func _hide_range_preview() -> void:
-	if range_preview:
+	if is_instance_valid(range_preview):
 		range_preview.hide_preview()
 
 func _on_enemy_died(_enemy: Enemy, reward: int) -> void:

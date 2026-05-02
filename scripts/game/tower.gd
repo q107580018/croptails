@@ -2,6 +2,14 @@ class_name Tower
 extends Area2D
 
 const ARROW_PROJECTILE_SCENE: PackedScene = preload("res://scenes/ArrowProjectile.tscn")
+const MELEE_VERTICAL_ANGLE_RATIO := 1.35
+const MELEE_DIAGONAL_ANGLE_RATIO := 0.45
+const PROJECTILE_SPAWN_OFFSET := Vector2(0, -6)
+const RANGE_UPGRADE_FACTOR := 1.08
+const RATE_UPGRADE_FACTOR := 1.06
+const MIN_SLOW_MULTIPLIER := 0.1
+const REFUND_RATIO := 0.8
+const MELEE_DIRECTION_EPSILON := 0.0001
 
 @export var config: TowerConfig
 @export var use_scene_animations: bool = false
@@ -19,6 +27,11 @@ func _ready() -> void:
 	sprite.animation_finished.connect(_on_sprite_animation_finished)
 	if config:
 		apply_config(config)
+
+func _exit_tree() -> void:
+	if built_on_slot:
+		built_on_slot.reset_slot()
+		built_on_slot = null
 
 func _process(delta: float) -> void:
 	cooldown = maxf(cooldown - delta, 0.0)
@@ -84,7 +97,7 @@ func _attack_melee_line(target_position: Vector2) -> void:
 	if melee_hitbox == null or melee_hitbox_shape == null:
 		return
 	var direction := target_position - global_position
-	if direction.length_squared() <= 0.0001:
+	if direction.length_squared() <= MELEE_DIRECTION_EPSILON:
 		return
 	direction = direction.normalized()
 	var attack_range := _effective_range()
@@ -115,13 +128,13 @@ func _attack_animation_name(target_position: Vector2) -> StringName:
 	if config.role != TowerConfig.Role.MELEE_LINE:
 		return &"shoot"
 	var direction := target_position - global_position
-	if direction.length_squared() <= 0.0001:
+	if direction.length_squared() <= MELEE_DIRECTION_EPSILON:
 		return &"shoot"
 	var abs_x := absf(direction.x)
 	var abs_y := absf(direction.y)
-	if abs_y > abs_x * 1.35:
+	if abs_y > abs_x * MELEE_VERTICAL_ANGLE_RATIO:
 		return &"shoot_down" if direction.y > 0.0 else &"shoot_up"
-	if abs_y > abs_x * 0.45:
+	if abs_y > abs_x * MELEE_DIAGONAL_ANGLE_RATIO:
 		return &"shoot_down_right" if direction.y > 0.0 else &"shoot_up_right"
 	return &"shoot"
 
@@ -130,7 +143,7 @@ func _spawn_projectile(target_position: Vector2) -> void:
 		return
 	var projectile := ARROW_PROJECTILE_SCENE.instantiate() as ArrowProjectile
 	_projectile_parent().add_child(projectile)
-	projectile.setup(to_global(Vector2(0, -6)), target_position, config.projectile_texture)
+	projectile.setup(to_global(PROJECTILE_SPAWN_OFFSET), target_position, config.projectile_texture)
 
 func _projectile_parent() -> Node:
 	var towers_node := get_parent()
@@ -143,19 +156,23 @@ func _projectile_parent() -> Node:
 	return get_parent()
 
 func _effective_damage() -> int:
+	if config.upgrade_damage_add > 0:
+		return config.damage + config.upgrade_damage_add * (level - 1)
 	return int(roundi(config.damage * pow(config.upgrade_factor, level - 1)))
 
 func _effective_range() -> float:
-	return config.range * pow(1.08, level - 1)
+	return config.range * pow(RANGE_UPGRADE_FACTOR, level - 1)
 
 func _effective_fire_rate() -> float:
-	return config.fire_rate * pow(1.06, level - 1)
+	if config.upgrade_rate_add > 0.0:
+		return config.fire_rate + config.upgrade_rate_add * (level - 1)
+	return config.fire_rate * pow(RATE_UPGRADE_FACTOR, level - 1)
 
 func _effective_slow_target_count() -> int:
 	return config.slow_target_count + config.slow_target_increment * (level - 1)
 
 func _effective_slow_multiplier() -> float:
-	return maxf(config.slow_multiplier - config.slow_upgrade_step * (level - 1), 0.1)
+	return maxf(config.slow_multiplier - config.slow_upgrade_step * (level - 1), MIN_SLOW_MULTIPLIER)
 
 func can_upgrade() -> bool:
 	return level < config.max_level
@@ -172,12 +189,20 @@ func get_upgrade_cost() -> int:
 func get_upgrade_preview() -> String:
 	if not can_upgrade():
 		return ""
-	var next_dmg := int(roundi(config.damage * pow(config.upgrade_factor, level)))
-	var next_range := config.range * pow(1.08, level)
-	var next_rate := config.fire_rate * pow(1.06, level)
+	var next_dmg: int
+	var next_rate: float
+	if config.upgrade_damage_add > 0:
+		next_dmg = config.damage + config.upgrade_damage_add * level
+	else:
+		next_dmg = int(roundi(config.damage * pow(config.upgrade_factor, level)))
+	if config.upgrade_rate_add > 0.0:
+		next_rate = config.fire_rate + config.upgrade_rate_add * level
+	else:
+		next_rate = config.fire_rate * pow(RATE_UPGRADE_FACTOR, level)
+	var next_range := config.range * pow(RANGE_UPGRADE_FACTOR, level)
 	if config.role == TowerConfig.Role.SLOW:
 		var next_target_count := config.slow_target_count + config.slow_target_increment * level
-		var next_slow_multiplier := maxf(config.slow_multiplier - config.slow_upgrade_step * level, 0.1)
+		var next_slow_multiplier := maxf(config.slow_multiplier - config.slow_upgrade_step * level, MIN_SLOW_MULTIPLIER)
 		return "伤%d→%d  射%d→%d  速%.1f→%.1f  目标%d→%d  减%.0f%%→%.0f%%" % [
 			_effective_damage(),
 			next_dmg,
@@ -193,7 +218,7 @@ func get_upgrade_preview() -> String:
 	return "伤%d→%d  射%d→%d  速%.1f→%.1f" % [_effective_damage(), next_dmg, int(_effective_range()), int(next_range), _effective_fire_rate(), next_rate]
 
 func get_refund_value() -> int:
-	return int(config.cost * 0.8 + (level - 1) * config.upgrade_cost * 0.8)
+	return int(config.cost * REFUND_RATIO + (level - 1) * config.upgrade_cost * REFUND_RATIO)
 
 func upgrade() -> void:
 	level += 1

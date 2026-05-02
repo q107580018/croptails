@@ -55,9 +55,9 @@ func hide_menu() -> void:
 
 func _bind_nodes() -> void:
 	if close_button == null:
-		close_button = get_node("Margin/Content/Header/CloseButton") as Button
+		close_button = %CloseButton
 	if options_list == null:
-		options_list = get_node("Margin/Content/OptionsList") as VBoxContainer
+		options_list = %OptionsList
 	if not close_connected:
 		close_button.pressed.connect(hide_menu)
 		close_connected = true

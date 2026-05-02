@@ -75,6 +75,7 @@ grow_vertical = 2
 mouse_filter = 2
 
 [node name="IconFrame" type="Control" parent="Row" unique_id=2010234611]
+unique_name_in_owner = true
 clip_contents = true
 layout_mode = 1
 anchors_preset = -1
@@ -83,6 +84,7 @@ offset_bottom = 64.0
 mouse_filter = 2
 
 [node name="Icon" type="TextureRect" parent="Row/IconFrame" unique_id=2130994786]
+unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -104,12 +106,14 @@ mouse_filter = 2
 theme_override_constants/separation = 2
 
 [node name="TitleLabel" type="Label" parent="Row/Details" unique_id=771133491]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.94, 0.72, 1)
 theme_override_font_sizes/font_size = 16
 text = "箭塔  $50"
 
 [node name="DescriptionLabel" type="Label" parent="Row/Details" unique_id=955270436]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.83, 0.84, 0.77, 1)
 theme_override_font_sizes/font_size = 14

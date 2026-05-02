@@ -33,3 +33,17 @@ enum Role { ARROW, MULTI_SHOT, SLOW, MELEE_LINE }
 @export var max_level: int = 3
 @export var upgrade_cost: int = 40
 @export var upgrade_factor: float = 1.25
+@export var upgrade_damage_add: int = 0
+@export var upgrade_rate_add: float = 0.0
+
+
+func localized_name() -> String:
+	match role:
+		Role.MULTI_SHOT:
+			return "群攻塔"
+		Role.SLOW:
+			return "减速塔"
+		Role.MELEE_LINE:
+			return "长矛塔"
+		_:
+			return "箭塔"
