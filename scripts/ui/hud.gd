@@ -4,6 +4,9 @@ extends Control
 signal build_selected(slot: TowerSlot, tower_index: int)
 signal tower_upgrade(tower: Tower)
 signal tower_recycle(tower: Tower)
+signal build_option_hover_started(slot: TowerSlot, config: TowerConfig)
+signal build_option_hover_ended
+signal tower_action_menu_hidden
 
 @export var build_menu_scene: PackedScene = preload("res://scenes/ui/BuildMenu.tscn")
 
@@ -85,6 +88,7 @@ func hide_tower_action_menu() -> void:
 	if tower_action_menu:
 		tower_action_menu.visible = false
 	current_tower = null
+	tower_action_menu_hidden.emit()
 
 
 func _on_backdrop_input(event: InputEvent) -> void:
@@ -139,6 +143,8 @@ func _apply_hud_style() -> void:
 func _create_build_menu_instance() -> void:
 	build_menu = build_menu_scene.instantiate() as BuildMenu
 	build_menu.tower_selected.connect(func(slot: TowerSlot, tower_index: int) -> void: build_selected.emit(slot, tower_index))
+	build_menu.tower_hover_started.connect(func(slot: TowerSlot, config: TowerConfig) -> void: build_option_hover_started.emit(slot, config))
+	build_menu.tower_hover_ended.connect(func() -> void: build_option_hover_ended.emit())
 	add_child(build_menu)
 
 
@@ -226,6 +232,8 @@ func _localized_name(config: TowerConfig) -> String:
 			return "群攻塔"
 		TowerConfig.Role.SLOW:
 			return "减速塔"
+		TowerConfig.Role.MELEE_LINE:
+			return "长矛塔"
 		_:
 			return "箭塔"
 

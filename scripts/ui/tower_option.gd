@@ -2,8 +2,8 @@ class_name TowerOption
 extends Button
 
 signal selected(index: int)
-
-const IDLE_FRAME_REGION := Rect2(0.0, 0.0, 192.0, 192.0)
+signal hover_started(config: TowerConfig)
+signal hover_ended
 
 var tower_icon: TextureRect
 var icon_frame: Control
@@ -17,13 +17,15 @@ var tower_config: TowerConfig
 func _ready() -> void:
 	_bind_nodes()
 	pressed.connect(func() -> void: selected.emit(tower_index))
+	mouse_entered.connect(_on_mouse_entered)
+	mouse_exited.connect(_on_mouse_exited)
 
 
 func setup(config: TowerConfig, index: int, coins: int) -> void:
 	_bind_nodes()
 	tower_config = config
 	tower_index = index
-	tower_icon.texture = config.menu_icon_texture if config.menu_icon_texture else _first_idle_frame(config.idle_texture)
+	tower_icon.texture = config.menu_icon_texture if config.menu_icon_texture else _first_idle_frame(config.idle_texture, config.frame_size)
 	if tower_icon.texture == null:
 		push_warning("Tower option '%s' has no menu icon texture." % config.display_name)
 	icon_frame.custom_minimum_size = Vector2(64.0, 64.0)
@@ -62,6 +64,8 @@ func _localized_tower_name(config: TowerConfig) -> String:
 			return "群攻塔"
 		TowerConfig.Role.SLOW:
 			return "减速塔"
+		TowerConfig.Role.MELEE_LINE:
+			return "长矛塔"
 		_:
 			return "箭塔"
 
@@ -76,13 +80,24 @@ func _tower_description(config: TowerConfig) -> String:
 		parts.append("矢%d" % config.multi_arrow_count)
 	elif config.role == TowerConfig.Role.SLOW:
 		parts.append("减%.0f%% %.1fs" % [(1.0 - config.slow_multiplier) * 100.0, config.slow_duration])
+	elif config.role == TowerConfig.Role.MELEE_LINE:
+		parts.append("线宽%d" % int(config.line_attack_width))
 	return "  ".join(parts)
 
 
-func _first_idle_frame(texture: Texture2D) -> Texture2D:
+func _first_idle_frame(texture: Texture2D, frame_size: Vector2) -> Texture2D:
 	if texture == null:
 		return null
 	var frame := AtlasTexture.new()
 	frame.atlas = texture
-	frame.region = IDLE_FRAME_REGION
+	frame.region = Rect2(Vector2.ZERO, frame_size)
 	return frame
+
+
+func _on_mouse_entered() -> void:
+	if tower_config:
+		hover_started.emit(tower_config)
+
+
+func _on_mouse_exited() -> void:
+	hover_ended.emit()

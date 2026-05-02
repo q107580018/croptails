@@ -4,12 +4,15 @@ extends Node2D
 signal stats_changed(lives: int, coins: int, wave: int, max_waves: int)
 signal status_changed(text: String)
 
+const RangePreviewScene := preload("res://scripts/game/range_preview.gd")
+
 @export var tower_scene: PackedScene = preload("res://scenes/Tower.tscn")
 @export var enemy_scene: PackedScene = preload("res://scenes/Enemy.tscn")
 @export var tower_configs: Array[TowerConfig] = [
 	preload("res://resources/towers/arrow_tower.tres"),
 	preload("res://resources/towers/splash_tower.tres"),
 	preload("res://resources/towers/slow_tower.tres"),
+	preload("res://resources/towers/lancer_tower.tres"),
 ]
 @export var waves: Array[WaveConfig] = [
 	preload("res://resources/waves/wave_01.tres"),
@@ -27,6 +30,7 @@ signal status_changed(text: String)
 @onready var enemy_path: Path2D = $World/EnemyPath
 @onready var tower_slots: Node2D = $World/TowerSlots
 @onready var towers: Node2D = $World/Towers
+@onready var world: Node2D = $World
 @onready var state_machine: StateMachine = $GameStateMachine
 @onready var hud: Hud = $UI/Hud
 
@@ -34,12 +38,18 @@ var lives: int = 20
 var coins: int = 180
 var current_wave_index: int = 0
 var spawning: bool = false
+var game_over: bool = false
+var range_preview
 
 func _ready() -> void:
 	hud.setup(self)
 	hud.build_selected.connect(_on_hud_build_selected)
 	hud.tower_upgrade.connect(_on_hud_tower_upgrade)
 	hud.tower_recycle.connect(_on_hud_tower_recycle)
+	hud.build_option_hover_started.connect(_on_build_option_hover_started)
+	hud.build_option_hover_ended.connect(_hide_range_preview)
+	hud.tower_action_menu_hidden.connect(_hide_range_preview)
+	_create_range_preview()
 	for slot_node: Node in tower_slots.get_children():
 		if slot_node is TowerSlot:
 			var slot := slot_node as TowerSlot
@@ -53,12 +63,14 @@ func has_more_waves() -> bool:
 	return current_wave_index < waves.size()
 
 func start_wave() -> void:
+	if game_over:
+		return
 	if has_more_waves():
 		hud.hide_build_menu()
 		state_machine.transition_to(&"WavePhase")
 
 func spawn_current_wave() -> void:
-	if spawning or not has_more_waves():
+	if game_over or spawning or not has_more_waves():
 		return
 	spawning = true
 	var wave := waves[current_wave_index]
@@ -66,6 +78,8 @@ func spawn_current_wave() -> void:
 	_emit_stats()
 	await _spawn_wave_entries(wave)
 	spawning = false
+	if game_over:
+		return
 	await get_tree().create_timer(0.3).timeout
 	_check_wave_end()
 
@@ -92,11 +106,16 @@ func restart() -> void:
 func _spawn_wave_entries(wave: WaveConfig) -> void:
 	for entry: WaveEntry in wave.entries:
 		for i: int in entry.count:
+			if game_over:
+				return
 			_spawn_enemy(entry.enemy, entry.health_multiplier)
 			await get_tree().create_timer(entry.spawn_interval).timeout
 
 func _spawn_enemy(config: EnemyConfig, health_mult: float = 1.0) -> void:
-	var enemy := enemy_scene.instantiate() as Enemy
+	if game_over:
+		return
+	var scene := config.enemy_scene if config and config.enemy_scene else enemy_scene
+	var enemy := scene.instantiate() as Enemy
 	enemy.health_multiplier = health_mult
 	enemy.config = config
 	enemy.add_to_group("enemies")
@@ -113,12 +132,14 @@ func _on_slot_tower_clicked(slot: TowerSlot) -> void:
 	hud.hide_build_menu()
 	var tower := slot.current_tower
 	if tower:
+		_show_range_preview(tower.global_position, tower.get_range_radius(), tower.get_range_color())
 		var menu_position := slot.get_global_transform_with_canvas().origin
 		hud.show_tower_action_menu(tower, coins, menu_position)
 
 func _on_hud_build_selected(slot: TowerSlot, tower_index: int) -> void:
 	if slot == null or slot.occupied:
 		hud.hide_build_menu()
+		_hide_range_preview()
 		return
 	var clamped_index := clampi(tower_index, 0, tower_configs.size() - 1)
 	var config := tower_configs[clamped_index]
@@ -126,7 +147,8 @@ func _on_hud_build_selected(slot: TowerSlot, tower_index: int) -> void:
 		set_status("金币不足，无法建造 %s。" % config.display_name)
 		return
 	coins -= config.cost
-	var tower := tower_scene.instantiate() as Tower
+	var scene := load(config.tower_scene_path) as PackedScene if not config.tower_scene_path.is_empty() else tower_scene
+	var tower := scene.instantiate() as Tower
 	tower.config = config
 	tower.built_on_slot = slot
 	slot.current_tower = tower
@@ -134,6 +156,7 @@ func _on_hud_build_selected(slot: TowerSlot, tower_index: int) -> void:
 	tower.global_position = slot.global_position
 	slot.mark_occupied()
 	hud.hide_build_menu()
+	_hide_range_preview()
 	_emit_stats()
 
 func _on_hud_tower_upgrade(tower: Tower) -> void:
@@ -151,10 +174,34 @@ func _on_hud_tower_upgrade(tower: Tower) -> void:
 func _on_hud_tower_recycle(tower: Tower) -> void:
 	var refund := tower.get_refund_value()
 	coins += refund
+	_hide_range_preview()
 	tower.built_on_slot.reset_slot()
 	tower.queue_free()
 	hud.hide_tower_action_menu()
 	_emit_stats()
+
+
+func _on_build_option_hover_started(slot: TowerSlot, config: TowerConfig) -> void:
+	if slot == null or config == null:
+		return
+	_show_range_preview(slot.global_position, config.range, config.marker_color)
+
+func _create_range_preview() -> void:
+	range_preview = RangePreviewScene.new()
+	range_preview.z_index = 1
+	range_preview.visible = false
+	world.add_child(range_preview)
+
+
+func _show_range_preview(global_position: Vector2, radius: float, color: Color) -> void:
+	if range_preview == null:
+		return
+	range_preview.show_preview(world.to_local(global_position), radius, color)
+
+
+func _hide_range_preview() -> void:
+	if range_preview:
+		range_preview.hide_preview()
 
 func _on_enemy_died(_enemy: Enemy, reward: int) -> void:
 	coins += reward
@@ -165,7 +212,7 @@ func _on_enemy_reached_goal(_enemy: Enemy, life_damage: int) -> void:
 	lives = max(lives - life_damage, 0)
 	_emit_stats()
 	if lives <= 0:
-		state_machine.transition_to(&"DefeatPhase")
+		_trigger_defeat()
 	else:
 		_check_wave_end_after_tree_update()
 
@@ -194,3 +241,12 @@ func _active_enemy_count() -> int:
 		if not child.is_queued_for_deletion():
 			count += 1
 	return count
+
+func _trigger_defeat() -> void:
+	if game_over:
+		return
+	game_over = true
+	spawning = false
+	for child: Node in enemy_path.get_children():
+		child.queue_free()
+	state_machine.transition_to(&"DefeatPhase")

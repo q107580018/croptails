@@ -1,0 +1,32 @@
+[gd_resource type="Resource" script_class="TowerConfig" format=3 uid="uid://b51tjsxl0dtxa"]
+
+[ext_resource type="Script" uid="uid://dnckf2x4we1yb" path="res://scripts/data/tower_config.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://c6it6y3bx83oa" path="res://assets/Tiny Swords/Units/Blue Units/Lancer/Lancer_Idle.png" id="2_idle"]
+[ext_resource type="Texture2D" uid="uid://i6j7mdjddj8j" path="res://assets/Tiny Swords/Units/Blue Units/Lancer/Lancer_Right_Attack.png" id="3_right"]
+[ext_resource type="Texture2D" uid="uid://dvbrm07mjgtca" path="res://assets/Tiny Swords/Units/Blue Units/Lancer/Lancer_Up_Attack.png" id="4_up"]
+[ext_resource type="Texture2D" uid="uid://bp6b1q5hhcglr" path="res://assets/Tiny Swords/Units/Blue Units/Lancer/Lancer_Down_Attack.png" id="5_down"]
+[ext_resource type="Texture2D" uid="uid://b6ny00ohw14da" path="res://assets/Tiny Swords/Units/Blue Units/Lancer/Lancer_UpRight_Attack.png" id="6_up_right"]
+[ext_resource type="Texture2D" uid="uid://dacx1up54vr7b" path="res://assets/Tiny Swords/Units/Blue Units/Lancer/Lancer_DownRight_Attack.png" id="7_down_right"]
+
+[resource]
+script = ExtResource("1")
+display_name = "Lancer Tower"
+role = 3
+tower_scene_path = "res://scenes/LancerTower.tscn"
+cost = 95
+range = 58.0
+fire_rate = 0.65
+damage = 44
+line_attack_width = 32.0
+marker_color = Color(0.45, 0.62, 0.9, 1)
+idle_texture = ExtResource("2_idle")
+shoot_texture = ExtResource("3_right")
+shoot_up_texture = ExtResource("4_up")
+shoot_down_texture = ExtResource("5_down")
+shoot_up_right_texture = ExtResource("6_up_right")
+shoot_down_right_texture = ExtResource("7_down_right")
+frame_size = Vector2(192, 320)
+idle_frame_count = 20
+shoot_frame_count = 5
+upgrade_cost = 55
+upgrade_factor = 1.3
