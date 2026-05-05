@@ -6,17 +6,12 @@ signal tower_upgrade(tower: Tower)
 signal tower_recycle(tower: Tower)
 signal build_option_hover_started(slot: TowerSlot, config: TowerConfig)
 signal build_option_hover_ended
+signal build_menu_hidden
 signal tower_action_menu_hidden
 
 @export var build_menu_scene: PackedScene = preload("res://scenes/ui/BuildMenu.tscn")
 
-@onready var lives_label: Label = $TopBar/LivesLabel
-@onready var coins_label: Label = $TopBar/CoinsLabel
-@onready var wave_label: Label = $TopBar/WaveLabel
-@onready var tower_buttons: HBoxContainer = $TowerButtons
-@onready var start_wave_button: Button = $StartWaveButton
-@onready var restart_button: Button = $RestartButton
-@onready var status_label: Label = $StatusLabel
+@onready var status_hud: StatusHud = $"../StatusHud"
 
 var game: Main
 var build_menu: BuildMenu
@@ -38,22 +33,18 @@ func setup(game_node: Main) -> void:
 	game = game_node
 	game.stats_changed.connect(_on_stats_changed)
 	game.status_changed.connect(_on_status_changed)
-	tower_buttons.visible = false
-	start_wave_button.text = "开始进攻"
-	restart_button.text = "重新开始"
-	start_wave_button.pressed.connect(game.start_wave)
-	restart_button.pressed.connect(game.restart)
-	_apply_hud_style()
+	status_hud.start_wave_button.pressed.connect(game.start_wave)
+	status_hud.restart_button.pressed.connect(game.restart)
 	_create_build_menu_instance()
 	_create_tower_action_menu()
 
 
 func set_start_wave_enabled(enabled: bool) -> void:
-	start_wave_button.disabled = not enabled
+	status_hud.set_start_wave_enabled(enabled)
 
 
 func show_restart(should_show: bool) -> void:
-	restart_button.visible = should_show
+	status_hud.show_restart(should_show)
 
 
 func show_build_menu(slot: TowerSlot, tower_configs: Array[TowerConfig], coins: int, target_position: Vector2) -> void:
@@ -103,9 +94,7 @@ func _style_close_button(button: Button) -> void:
 
 
 func _on_stats_changed(lives: int, coins: int, wave: int, max_waves: int) -> void:
-	lives_label.text = "生命 %d" % lives
-	coins_label.text = "金币 %d" % coins
-	wave_label.text = "波次 %d/%d" % [wave, max_waves]
+	status_hud.set_stats(lives, coins, wave, max_waves)
 	if build_menu:
 		build_menu.update_coins(coins)
 	if tower_action_menu and tower_action_menu.visible and current_tower:
@@ -117,27 +106,7 @@ func _on_stats_changed(lives: int, coins: int, wave: int, max_waves: int) -> voi
 
 
 func _on_status_changed(text: String) -> void:
-	status_label.text = text
-
-
-func _apply_hud_style() -> void:
-	var panel := $HudPanel as ColorRect
-	panel.offset_right = 360.0
-	panel.offset_bottom = 66.0
-	panel.color = Color(0.06, 0.08, 0.07, 0.82)
-	$TopBar.add_theme_constant_override("separation", 12)
-	_style_label(lives_label)
-	_style_label(coins_label)
-	_style_label(wave_label)
-	status_label.offset_top = 74.0
-	status_label.offset_right = 460.0
-	status_label.add_theme_color_override("font_color", Color(0.92, 0.88, 0.74))
-	start_wave_button.position = Vector2(374, 14)
-	start_wave_button.custom_minimum_size = Vector2(104, 36)
-	restart_button.position = Vector2(486, 14)
-	restart_button.custom_minimum_size = Vector2(86, 36)
-	_style_button(start_wave_button, Color(0.23, 0.49, 0.27))
-	_style_button(restart_button, Color(0.45, 0.18, 0.16))
+	status_hud.set_status(text)
 
 
 func _create_build_menu_instance() -> void:
@@ -145,6 +114,7 @@ func _create_build_menu_instance() -> void:
 	build_menu.tower_selected.connect(func(slot: TowerSlot, tower_index: int) -> void: build_selected.emit(slot, tower_index))
 	build_menu.tower_hover_started.connect(func(slot: TowerSlot, config: TowerConfig) -> void: build_option_hover_started.emit(slot, config))
 	build_menu.tower_hover_ended.connect(func() -> void: build_option_hover_ended.emit())
+	build_menu.build_menu_hidden.connect(func() -> void: build_menu_hidden.emit())
 	add_child(build_menu)
 
 
@@ -233,10 +203,6 @@ func _clamped_action_position(target_position: Vector2) -> Vector2:
 	next_position.x = clampf(next_position.x, ACTION_MENU_MARGIN, viewport_size.x - menu_size.x - ACTION_MENU_MARGIN)
 	next_position.y = clampf(next_position.y, ACTION_MENU_MARGIN, viewport_size.y - menu_size.y - ACTION_MENU_MARGIN)
 	return next_position
-
-
-func _style_label(label: Label) -> void:
-	label.add_theme_color_override("font_color", Color(0.95, 0.94, 0.84))
 
 
 func _style_button(button: Button, color: Color) -> void:

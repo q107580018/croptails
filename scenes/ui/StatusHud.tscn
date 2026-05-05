@@ -1,0 +1,330 @@
+[gd_scene load_steps=13 format=4]
+
+[ext_resource type="Script" uid="uid://btc81pqte3m" path="res://scripts/ui/status_hud.gd" id="1_status"]
+[ext_resource type="Texture2D" path="res://assets/ui/health/heart_full.png" id="2_heart_full"]
+[ext_resource type="Texture2D" path="res://assets/ui/health/heart_half.png" id="3_heart_half"]
+[ext_resource type="Texture2D" path="res://assets/ui/health/heart_empty.png" id="4_heart_empty"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
+content_margin_left = 16.0
+content_margin_top = 10.0
+content_margin_right = 16.0
+content_margin_bottom = 10.0
+bg_color = Color(0, 0, 0, 0)
+border_color = Color(0, 0, 0, 0)
+corner_radius_top_left = 7
+corner_radius_top_right = 7
+corner_radius_bottom_right = 7
+corner_radius_bottom_left = 7
+shadow_color = Color(0, 0, 0, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_coins"]
+content_margin_left = 10.0
+content_margin_top = 5.0
+content_margin_right = 10.0
+content_margin_bottom = 5.0
+bg_color = Color(0.71, 0.53, 0.2, 0.94)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.98, 0.78, 0.32, 0.9)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wave"]
+content_margin_left = 10.0
+content_margin_top = 5.0
+content_margin_right = 10.0
+content_margin_bottom = 5.0
+bg_color = Color(0.28, 0.54, 0.63, 0.94)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.57, 0.83, 0.91, 0.9)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_start_normal"]
+content_margin_left = 10.0
+content_margin_top = 7.0
+content_margin_right = 10.0
+content_margin_bottom = 7.0
+bg_color = Color(0.2, 0.44, 0.55, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.9, 0.78, 0.5, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_start_hover"]
+content_margin_left = 10.0
+content_margin_top = 7.0
+content_margin_right = 10.0
+content_margin_bottom = 7.0
+bg_color = Color(0.296, 0.5072, 0.604, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.912, 0.8064, 0.56, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_start_pressed"]
+content_margin_left = 10.0
+content_margin_top = 7.0
+content_margin_right = 10.0
+content_margin_bottom = 7.0
+bg_color = Color(0.17, 0.374, 0.4675, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.9, 0.78, 0.5, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_restart_normal"]
+content_margin_left = 10.0
+content_margin_top = 7.0
+content_margin_right = 10.0
+content_margin_bottom = 7.0
+bg_color = Color(0.55, 0.2, 0.16, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.96, 0.78, 0.5, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_restart_hover"]
+content_margin_left = 10.0
+content_margin_top = 7.0
+content_margin_right = 10.0
+content_margin_bottom = 7.0
+bg_color = Color(0.604, 0.296, 0.2608, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.9648, 0.8064, 0.56, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_restart_pressed"]
+content_margin_left = 10.0
+content_margin_top = 7.0
+content_margin_right = 10.0
+content_margin_bottom = 7.0
+bg_color = Color(0.4675, 0.17, 0.136, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.96, 0.78, 0.5, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_button_disabled"]
+content_margin_left = 10.0
+content_margin_top = 7.0
+content_margin_right = 10.0
+content_margin_bottom = 7.0
+bg_color = Color(0.2, 0.2, 0.18, 0.85)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.45, 0.42, 0.34, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[node name="StatusHud" type="Control"]
+layout_mode = 0
+offset_left = 0.0
+offset_top = 0.0
+custom_minimum_size = Vector2(604, 116)
+offset_right = 604.0
+offset_bottom = 116.0
+mouse_filter = 2
+script = ExtResource("1_status")
+
+[node name="BackgroundPanel" type="PanelContainer" parent="."]
+layout_mode = 0
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 604.0
+offset_bottom = 116.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+
+[node name="Content" type="VBoxContainer" parent="BackgroundPanel"]
+layout_mode = 0
+theme_override_constants/separation = 6
+
+[node name="HeartLine" type="HBoxContainer" parent="BackgroundPanel/Content"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="HeartRow" type="HBoxContainer" parent="BackgroundPanel/Content/HeartLine"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="Heart01" type="TextureRect" parent="BackgroundPanel/Content/HeartLine/HeartRow"]
+custom_minimum_size = Vector2(26, 20)
+layout_mode = 2
+texture = ExtResource("2_heart_full")
+stretch_mode = 5
+
+[node name="Heart02" type="TextureRect" parent="BackgroundPanel/Content/HeartLine/HeartRow"]
+custom_minimum_size = Vector2(26, 20)
+layout_mode = 2
+texture = ExtResource("2_heart_full")
+stretch_mode = 5
+
+[node name="Heart03" type="TextureRect" parent="BackgroundPanel/Content/HeartLine/HeartRow"]
+custom_minimum_size = Vector2(26, 20)
+layout_mode = 2
+texture = ExtResource("2_heart_full")
+stretch_mode = 5
+
+[node name="Heart04" type="TextureRect" parent="BackgroundPanel/Content/HeartLine/HeartRow"]
+custom_minimum_size = Vector2(26, 20)
+layout_mode = 2
+texture = ExtResource("2_heart_full")
+stretch_mode = 5
+
+[node name="Heart05" type="TextureRect" parent="BackgroundPanel/Content/HeartLine/HeartRow"]
+custom_minimum_size = Vector2(26, 20)
+layout_mode = 2
+texture = ExtResource("2_heart_full")
+stretch_mode = 5
+
+[node name="Heart06" type="TextureRect" parent="BackgroundPanel/Content/HeartLine/HeartRow"]
+custom_minimum_size = Vector2(26, 20)
+layout_mode = 2
+texture = ExtResource("2_heart_full")
+stretch_mode = 5
+
+[node name="Heart07" type="TextureRect" parent="BackgroundPanel/Content/HeartLine/HeartRow"]
+custom_minimum_size = Vector2(26, 20)
+layout_mode = 2
+texture = ExtResource("2_heart_full")
+stretch_mode = 5
+
+[node name="Heart08" type="TextureRect" parent="BackgroundPanel/Content/HeartLine/HeartRow"]
+custom_minimum_size = Vector2(26, 20)
+layout_mode = 2
+texture = ExtResource("2_heart_full")
+stretch_mode = 5
+
+[node name="Heart09" type="TextureRect" parent="BackgroundPanel/Content/HeartLine/HeartRow"]
+custom_minimum_size = Vector2(26, 20)
+layout_mode = 2
+texture = ExtResource("2_heart_full")
+stretch_mode = 5
+
+[node name="Heart10" type="TextureRect" parent="BackgroundPanel/Content/HeartLine/HeartRow"]
+custom_minimum_size = Vector2(26, 20)
+layout_mode = 2
+texture = ExtResource("2_heart_full")
+stretch_mode = 5
+
+[node name="InfoLine" type="HBoxContainer" parent="BackgroundPanel/Content"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="StatsRow" type="HBoxContainer" parent="BackgroundPanel/Content/InfoLine"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+
+[node name="CoinsBadge" type="PanelContainer" parent="BackgroundPanel/Content/InfoLine/StatsRow"]
+custom_minimum_size = Vector2(104, 30)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_coins")
+
+[node name="Label" type="Label" parent="BackgroundPanel/Content/InfoLine/StatsRow/CoinsBadge"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.96, 0.76, 1)
+theme_override_font_sizes/font_size = 15
+horizontal_alignment = 1
+vertical_alignment = 1
+text = "金币 180"
+
+[node name="WaveBadge" type="PanelContainer" parent="BackgroundPanel/Content/InfoLine/StatsRow"]
+custom_minimum_size = Vector2(116, 30)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_wave")
+
+[node name="Label" type="Label" parent="BackgroundPanel/Content/InfoLine/StatsRow/WaveBadge"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.92, 0.98, 1, 1)
+theme_override_font_sizes/font_size = 15
+horizontal_alignment = 1
+vertical_alignment = 1
+text = "波次 0/10"
+
+[node name="Actions" type="HBoxContainer" parent="BackgroundPanel/Content/InfoLine"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="StartWaveButton" type="Button" parent="BackgroundPanel/Content/InfoLine/Actions"]
+custom_minimum_size = Vector2(104, 34)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.98, 0.94, 0.78, 1)
+theme_override_colors/font_disabled_color = Color(0.62, 0.58, 0.48, 1)
+theme_override_font_sizes/font_size = 14
+theme_override_styles/normal = SubResource("StyleBoxFlat_start_normal")
+theme_override_styles/hover = SubResource("StyleBoxFlat_start_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_start_pressed")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_button_disabled")
+text = "开始进攻"
+
+[node name="RestartButton" type="Button" parent="BackgroundPanel/Content/InfoLine/Actions"]
+visible = false
+custom_minimum_size = Vector2(86, 34)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.98, 0.94, 0.78, 1)
+theme_override_colors/font_disabled_color = Color(0.62, 0.58, 0.48, 1)
+theme_override_font_sizes/font_size = 14
+theme_override_styles/normal = SubResource("StyleBoxFlat_restart_normal")
+theme_override_styles/hover = SubResource("StyleBoxFlat_restart_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_restart_pressed")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_button_disabled")
+text = "重新开始"
+
+[node name="StatusLabel" type="Label" parent="BackgroundPanel/Content"]
+custom_minimum_size = Vector2(0, 22)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.34, 0.27, 0.16, 1)
+theme_override_colors/font_shadow_color = Color(1, 0.95, 0.72, 0.45)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_font_sizes/font_size = 14
+text = "准备建造防御塔。"
+vertical_alignment = 1
+clip_text = true

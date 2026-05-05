@@ -64,6 +64,43 @@ func take_damage(amount: int) -> void:
 		died.emit(self, config.reward if config else 0)
 		queue_free()
 
+func play_hit_effect(texture: Texture2D, hframes: int, vframes: int, scale_override: float = 1.0) -> void:
+	if texture == null:
+		return
+	var effect := AnimatedSprite2D.new()
+	effect.z_index = 10
+	effect.scale = Vector2(scale_override, scale_override)
+	var frame_w := texture.get_width() / hframes
+	var frame_h := texture.get_height() / vframes
+	var frames := SpriteFrames.new()
+	frames.add_animation(&"explode")
+	frames.set_animation_loop(&"explode", false)
+	frames.set_animation_speed(&"explode", 12.0)
+	for y: int in vframes:
+		for x: int in hframes:
+			var atlas := AtlasTexture.new()
+			atlas.atlas = texture
+			atlas.region = Rect2(frame_w * x, frame_h * y, frame_w, frame_h)
+			frames.add_frame(&"explode", atlas)
+	effect.sprite_frames = frames
+	var parent := _effect_parent()
+	if parent == null:
+		return
+	parent.add_child(effect)
+	effect.global_position = global_position
+	effect.play(&"explode")
+	effect.animation_finished.connect(effect.queue_free)
+
+func _effect_parent() -> Node:
+	var path := get_parent()
+	if path:
+		var world := path.get_parent()
+		if world:
+			var projectiles := world.get_node_or_null("Projectiles")
+			if projectiles:
+				return projectiles
+	return get_parent()
+
 func apply_slow(multiplier: float, duration: float) -> void:
 	if multiplier < slow_multiplier or slow_remaining <= 0.0:
 		slow_multiplier = multiplier

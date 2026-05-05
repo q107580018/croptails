@@ -31,6 +31,10 @@ enum Role { ARROW, MULTI_SHOT, SLOW, MELEE_LINE }
 @export var idle_frame_count: int = 6
 @export var shoot_frame_count: int = 8
 @export var max_level: int = 3
+@export var max_level_effect_texture: Texture2D
+@export var max_level_effect_hframes: int = 6
+@export var max_level_effect_vframes: int = 1
+@export var max_level_effect_scale: float = 0.3
 @export var upgrade_cost: int = 40
 @export var upgrade_factor: float = 1.25
 @export var upgrade_damage_add: int = 0

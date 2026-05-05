@@ -4,7 +4,8 @@
 [ext_resource type="Texture2D" uid="uid://ddk3d44djfy0o" path="res://assets/Tiny Swords/Units/Red Units/Archer/Archer_Idle.png" id="2_idle"]
 [ext_resource type="Texture2D" uid="uid://b5n1vl8arvbsk" path="res://assets/Tiny Swords/Units/Red Units/Archer/Archer_Shoot.png" id="3_shoot"]
 [ext_resource type="Texture2D" uid="uid://dgcpmlsbf6rm0" path="res://assets/Tiny Swords/Units/Red Units/Archer/Arrow.png" id="4_arrow"]
-[ext_resource type="Texture2D" path="res://assets/ui/tower_icons/splash_tower_icon.png" id="5_menu"]
+[ext_resource type="Texture2D" uid="uid://1rrbjkejl04n" path="res://assets/ui/tower_icons/splash_tower_icon.png" id="5_menu"]
+[ext_resource type="Texture2D" uid="uid://dwgopxhiqflb1" path="res://assets/Tiny Swords/Particle FX/Explosion_02.png" id="6_explosion"]
 
 [resource]
 script = ExtResource("1")
@@ -14,9 +15,10 @@ cost = 80
 range = 95.0
 fire_rate = 0.75
 damage = 16
-multi_arrow_count = 3
 marker_color = Color(0.85, 0.42, 0.23, 1)
 menu_icon_texture = ExtResource("5_menu")
 idle_texture = ExtResource("2_idle")
 shoot_texture = ExtResource("3_shoot")
 projectile_texture = ExtResource("4_arrow")
+max_level_effect_texture = ExtResource("6_explosion")
+max_level_effect_hframes = 10

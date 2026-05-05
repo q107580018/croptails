@@ -15,6 +15,7 @@ func _ready() -> void:
 
 func set_enabled(enabled: bool) -> void:
 	building_enabled = enabled
+	marker.visible = enabled or occupied
 	modulate = Color.WHITE if enabled else Color(0.55, 0.55, 0.55)
 
 func mark_occupied() -> void:

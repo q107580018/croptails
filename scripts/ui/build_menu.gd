@@ -4,6 +4,7 @@ extends PanelContainer
 signal tower_selected(slot: TowerSlot, tower_index: int)
 signal tower_hover_started(slot: TowerSlot, config: TowerConfig)
 signal tower_hover_ended
+signal build_menu_hidden
 
 @export var tower_option_scene: PackedScene = preload("res://scenes/ui/TowerOption.tscn")
 @export var menu_margin: float = 12.0
@@ -51,6 +52,7 @@ func hide_menu() -> void:
 	selected_slot = null
 	current_tower_configs = []
 	tower_hover_ended.emit()
+	build_menu_hidden.emit()
 
 
 func _bind_nodes() -> void:

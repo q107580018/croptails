@@ -81,6 +81,8 @@ func _attack(target: Enemy) -> void:
 			for t: Enemy in targets:
 				_spawn_projectile(t.global_position)
 				t.take_damage(_effective_damage())
+				if level >= config.max_level:
+					t.play_hit_effect(config.max_level_effect_texture, config.max_level_effect_hframes, config.max_level_effect_vframes, config.max_level_effect_scale)
 		TowerConfig.Role.MELEE_LINE:
 			_attack_melee_line(target.global_position)
 		TowerConfig.Role.SLOW:

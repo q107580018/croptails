@@ -5,10 +5,13 @@ signal stats_changed(lives: int, coins: int, wave: int, max_waves: int)
 signal status_changed(text: String)
 
 const RANGE_PREVIEW_SCENE := preload("res://scripts/game/range_preview.gd")
+const SELECTION_EFFECT_SCENE := preload("res://scenes/SelectionEffect.tscn")
+const BUILD_GRID_SIZE := 32.0
 const WAVE_END_CHECK_DELAY := 0.3
 
 @export var tower_scene: PackedScene = preload("res://scenes/Tower.tscn")
 @export var enemy_scene: PackedScene = preload("res://scenes/Enemy.tscn")
+@export var tower_slot_scene: PackedScene = preload("res://scenes/TowerSlot.tscn")
 @export var tower_configs: Array[TowerConfig] = [
 	preload("res://resources/towers/arrow_tower.tres"),
 	preload("res://resources/towers/splash_tower.tres"),
@@ -32,6 +35,8 @@ const WAVE_END_CHECK_DELAY := 0.3
 @onready var tower_slots: Node2D = %TowerSlots
 @onready var towers: Node2D = %Towers
 @onready var world: Node2D = %World
+@onready var terrain_map: TileMapLayer = $World/Map
+@onready var path_map: TileMapLayer = $World/PathMap
 @onready var state_machine: StateMachine = %GameStateMachine
 @onready var hud: Hud = %Hud
 
@@ -41,6 +46,7 @@ var current_wave_index: int = 0
 var spawning: bool = false
 var game_over: bool = false
 var range_preview: RangePreview
+var selection_effect: SelectionEffect
 
 func _ready() -> void:
 	hud.setup(self)
@@ -49,8 +55,12 @@ func _ready() -> void:
 	hud.tower_recycle.connect(_on_hud_tower_recycle)
 	hud.build_option_hover_started.connect(_on_build_option_hover_started)
 	hud.build_option_hover_ended.connect(_hide_range_preview)
+	hud.build_menu_hidden.connect(_hide_selection_effect)
 	hud.tower_action_menu_hidden.connect(_hide_range_preview)
+	hud.tower_action_menu_hidden.connect(_hide_selection_effect)
 	_create_range_preview()
+	_create_selection_effect()
+	_generate_tower_slots()
 	for slot_node: Node in tower_slots.get_children():
 		if slot_node is TowerSlot:
 			var slot := slot_node as TowerSlot
@@ -68,6 +78,7 @@ func start_wave() -> void:
 		return
 	if has_more_waves():
 		hud.hide_build_menu()
+		_hide_selection_effect()
 		state_machine.transition_to(&"WavePhase")
 
 func spawn_current_wave() -> void:
@@ -88,6 +99,7 @@ func set_building_enabled(enabled: bool) -> void:
 	if not enabled:
 		hud.hide_build_menu()
 		hud.hide_tower_action_menu()
+		_hide_selection_effect()
 	for slot_node: Node in tower_slots.get_children():
 		if slot_node is TowerSlot:
 			(slot_node as TowerSlot).set_enabled(enabled)
@@ -103,6 +115,52 @@ func show_restart(should_show: bool) -> void:
 
 func restart() -> void:
 	get_tree().reload_current_scene()
+
+func _generate_tower_slots() -> void:
+	for child: Node in tower_slots.get_children():
+		tower_slots.remove_child(child)
+		child.queue_free()
+
+	if tower_slot_scene == null or terrain_map == null:
+		return
+
+	for cell: Vector2i in terrain_map.get_used_cells():
+		for slot_position: Vector2 in _terrain_cell_slot_positions(cell):
+			if _slot_position_overlaps_path(slot_position):
+				continue
+			var slot := tower_slot_scene.instantiate() as TowerSlot
+			tower_slots.add_child(slot)
+			slot.global_position = slot_position
+
+func _terrain_cell_slot_positions(cell: Vector2i) -> Array[Vector2]:
+	var positions: Array[Vector2] = []
+	var tile_size := Vector2(terrain_map.tile_set.tile_size)
+	var origin := terrain_map.map_to_local(cell) - tile_size * 0.5
+	var columns := int(tile_size.x / BUILD_GRID_SIZE)
+	var rows := int(tile_size.y / BUILD_GRID_SIZE)
+	for y: int in rows:
+		for x: int in columns:
+			var local_position := origin + Vector2(x + 0.5, y + 0.5) * BUILD_GRID_SIZE
+			positions.append(terrain_map.to_global(local_position))
+	return positions
+
+func _slot_position_overlaps_path(slot_position: Vector2) -> bool:
+	if path_map == null:
+		return false
+	var slot_rect := _world_rect_from_center(slot_position, Vector2(BUILD_GRID_SIZE, BUILD_GRID_SIZE), tower_slots.global_scale.abs())
+	for path_cell: Vector2i in path_map.get_used_cells():
+		if slot_rect.intersects(_tile_world_rect(path_map, path_cell)):
+			return true
+	return false
+
+func _tile_world_rect(tile_map: TileMapLayer, cell: Vector2i) -> Rect2:
+	var tile_size := Vector2(tile_map.tile_set.tile_size)
+	var center := tile_map.to_global(tile_map.map_to_local(cell))
+	return _world_rect_from_center(center, tile_size, tile_map.global_scale.abs())
+
+func _world_rect_from_center(center: Vector2, local_size: Vector2, global_scale: Vector2 = Vector2.ONE) -> Rect2:
+	var global_size := local_size * global_scale
+	return Rect2(center - global_size * 0.5, global_size)
 
 func _spawn_wave_entries(wave: WaveConfig) -> void:
 	for entry: WaveEntry in wave.entries:
@@ -124,14 +182,15 @@ func _spawn_enemy(config: EnemyConfig, health_mult: float = 1.0) -> void:
 	enemy_path.add_child(enemy)
 
 func _on_slot_build_requested(slot: TowerSlot) -> void:
-	hud.hide_tower_action_menu()
 	var menu_position := slot.get_global_transform_with_canvas().origin
 	hud.show_build_menu(slot, tower_configs, coins, menu_position)
+	_show_selection_effect(slot)
 
 func _on_slot_tower_clicked(slot: TowerSlot) -> void:
 	hud.hide_build_menu()
 	var tower := slot.current_tower
 	if tower:
+		_show_selection_effect(tower, Vector2(0, -4))
 		_show_range_preview(tower.global_position, tower.get_range_radius(), tower.get_range_color())
 		var menu_position := slot.get_global_transform_with_canvas().origin
 		hud.show_tower_action_menu(tower, coins, menu_position)
@@ -157,6 +216,7 @@ func _on_hud_build_selected(slot: TowerSlot, tower_index: int) -> void:
 	slot.mark_occupied()
 	hud.hide_build_menu()
 	_hide_range_preview()
+	_hide_selection_effect()
 	_emit_stats()
 
 func _on_hud_tower_upgrade(tower: Tower) -> void:
@@ -169,12 +229,14 @@ func _on_hud_tower_upgrade(tower: Tower) -> void:
 	coins -= cost
 	tower.upgrade()
 	hud.hide_tower_action_menu()
+	_hide_selection_effect()
 	_emit_stats()
 
 func _on_hud_tower_recycle(tower: Tower) -> void:
 	var refund := tower.get_refund_value()
 	coins += refund
 	_hide_range_preview()
+	_hide_selection_effect()
 	tower.queue_free()
 	hud.hide_tower_action_menu()
 	_emit_stats()
@@ -192,6 +254,12 @@ func _create_range_preview() -> void:
 	world.add_child(range_preview)
 
 
+func _create_selection_effect() -> void:
+	selection_effect = SELECTION_EFFECT_SCENE.instantiate() as SelectionEffect
+	selection_effect.visible = false
+	world.add_child(selection_effect)
+
+
 func _show_range_preview(global_position: Vector2, radius: float, color: Color) -> void:
 	if range_preview == null:
 		return
@@ -201,6 +269,23 @@ func _show_range_preview(global_position: Vector2, radius: float, color: Color) 
 func _hide_range_preview() -> void:
 	if is_instance_valid(range_preview):
 		range_preview.hide_preview()
+
+
+func _show_selection_effect(target: Node2D, local_offset: Vector2 = Vector2.ZERO) -> void:
+	if not is_instance_valid(selection_effect) or target == null:
+		return
+	if selection_effect.get_parent() != target:
+		selection_effect.reparent(target)
+	selection_effect.position = local_offset
+	selection_effect.visible = true
+	selection_effect.sprite.play(SelectionEffect.ANIMATION_NAME)
+
+
+func _hide_selection_effect() -> void:
+	if is_instance_valid(selection_effect):
+		selection_effect.visible = false
+		if selection_effect.get_parent() != world:
+			selection_effect.reparent(world)
 
 func _on_enemy_died(_enemy: Enemy, reward: int) -> void:
 	coins += reward
